@@ -1,0 +1,1839 @@
+- id: '1704735387741'
+  alias: Backups went stale
+  description: ''
+  trigger:
+  - platform: device
+    type: changed_states
+    device_id: e655f3b1688740ba606dce70d4c0585f
+    entity_id: 5eb97896fa64ac50bf9bf5b84caa455f
+    domain: update
+  condition: []
+  action:
+  - service: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      title: Backups are stale
+      message: Please visit the 'Home Assistant Google Drive Backup ' add-on status
+        page for details.
+  mode: single
+- id: '1704735888083'
+  alias: Test Android Notif
+  description: ''
+  trigger:
+  - platform: time
+    at: '22:04:00'
+  condition: []
+  action:
+  - service: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      message: It's 11:50
+      title: HA Notif
+  - service: google_assistant_sdk.send_text_command
+    metadata: {}
+    data:
+      command:
+      - broadcast
+      - Lightning detected within 25 miles
+  mode: single
+- id: '1704739287925'
+  alias: Mike left zone
+  description: ''
+  use_blueprint:
+    path: homeassistant/notify_leaving_zone.yaml
+    input:
+      person_entity: person.mike_derousse
+      zone_entity: zone.home
+      notify_device: 3dcf40063e5611d33f788c6a60256c87
+- id: '1704739398534'
+  alias: Mike arrived
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: device_tracker.mike_pixel_6a
+    zone: zone.home
+    event: enter
+  condition: []
+  action:
+  - service: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      message: Mike arrived
+  mode: single
+- id: '1704739507203'
+  alias: Mike left
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: device_tracker.mike_pixel_6a
+    zone: zone.home
+    event: leave
+  condition: []
+  action:
+  - service: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      message: Mike left
+      data:
+        color: '#2DF56D'
+  mode: single
+- id: '1704771588315'
+  alias: Ben's Lamp Off
+  description: ''
+  trigger:
+  - platform: time
+    at: '22:00:00'
+  condition:
+  - condition: device
+    device_id: be3020ab1a167f9daacf02dc283392bd
+    domain: device_tracker
+    entity_id: 9a51ee2c3a40bacabd68fdb5dc64c511
+    type: is_not_home
+  action:
+  - type: turn_off
+    device_id: d9c24ceee668716c232312cdaa08fc60
+    entity_id: 354831fb13c4f3e6693af4a5aabddaeb
+    domain: switch
+  mode: single
+- id: '1704771985139'
+  alias: Ben's Lamp On
+  description: ''
+  trigger:
+  - platform: time
+    at: '16:30:00'
+  condition: []
+  action:
+  - type: turn_on
+    device_id: d9c24ceee668716c232312cdaa08fc60
+    entity_id: 354831fb13c4f3e6693af4a5aabddaeb
+    domain: switch
+  mode: single
+- id: '1704857051833'
+  alias: Shawn left
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: device_tracker.shawn_pixel_6a
+    zone: zone.home
+    event: leave
+  condition: []
+  action:
+  - if:
+    - condition: time
+      before: '15:00:00'
+    then:
+    - type: turn_off
+      device_id: 150a74da55af06b00ef1406b2f13e56b
+      entity_id: 9b974f7273f25e8839fda7d701000eac
+      domain: switch
+      enabled: true
+  - service: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      message: Shawn left
+  - type: turn_off
+    device_id: 41e1a2654c488b6bd1dd4e508f66dfa1
+    entity_id: 94faca77c06b28fecda23af7564683a7
+    domain: light
+    enabled: true
+  - if:
+    - condition: state
+      entity_id: binary_sensor.daytime
+      state: 'on'
+    then:
+    - type: turn_off
+      device_id: 41e1a2654c488b6bd1dd4e508f66dfa1
+      entity_id: 94faca77c06b28fecda23af7564683a7
+      domain: light
+  - type: turn_off
+    device_id: 6702c509cc29de049efd71996f5e21b8
+    entity_id: 56aa1dde73fde4d10f3ca07ad33b26ae
+    domain: switch
+  - type: turn_off
+    device_id: 221f6df8ee065d87660f4e2d98cc8964
+    entity_id: deac8380bed9f840d5ee7b92d12e7570
+    domain: switch
+  mode: single
+- id: '1704987487112'
+  alias: Start Evening Scene
+  description: ''
+  trigger:
+  - platform: time
+    at: '15:10:00'
+    enabled: false
+  - platform: state
+    entity_id:
+    - binary_sensor.evening
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: numeric_state
+    entity_id: zone.home
+    above: 0
+  action:
+  - service: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.new_scene
+  mode: single
+- id: '1704987608078'
+  alias: Start Late Evening Scene
+  description: ''
+  trigger:
+  - platform: time
+    at: '23:00:00'
+    enabled: false
+  - platform: state
+    entity_id:
+    - binary_sensor.late_evening_1
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: or
+    conditions:
+    - condition: zone
+      entity_id: device_tracker.shawn_pixel_6a
+      zone: zone.home
+    - condition: zone
+      entity_id: device_tracker.mike_pixel_6a
+      zone: zone.home
+    enabled: false
+  - condition: numeric_state
+    entity_id: zone.home
+    above: 0
+  action:
+  - service: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.late_evening
+  mode: single
+- id: '1704991481408'
+  alias: Office Light On
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: ed80edeabe0b8d9ccfef58ecfaf169c1
+    entity_id: 93e4de7f052b333e1f887dff4163ac30
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 4bc3fc30eafb0067e4da29126556278e
+    entity_id: 9bf11242df551f259eba16163160f55f
+    domain: light
+  mode: single
+- id: '1704991558044'
+  alias: Office Light Off
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: ed80edeabe0b8d9ccfef58ecfaf169c1
+    entity_id: 93e4de7f052b333e1f887dff4163ac30
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 4bc3fc30eafb0067e4da29126556278e
+    entity_id: 9bf11242df551f259eba16163160f55f
+    domain: light
+  mode: single
+- id: '1704997465245'
+  alias: Hall light on
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 82b084737b0fd0e848055421f571758f
+    entity_id: cee1e46d4d26c09366bdddc5ecda5f20
+    domain: binary_sensor
+  condition:
+  - condition: sun
+    before: sunrise
+    before_offset: 01:00:00
+    after: sunset
+    after_offset: -01:00:00
+    enabled: true
+  - condition: device
+    type: is_off
+    device_id: 1d38363f9fb4b2abbf85a291847a05d3
+    entity_id: 446f762a06208759f7de7cef84f65786
+    domain: light
+    enabled: false
+  action:
+  - if:
+    - condition: sun
+      after: sunrise
+      after_offset: 01:00:00
+    - condition: sun
+      before: sunset
+      before_offset: -01:00:00
+    then:
+    - type: turn_on
+      device_id: 1d38363f9fb4b2abbf85a291847a05d3
+      entity_id: 446f762a06208759f7de7cef84f65786
+      domain: light
+      brightness_pct: 100
+  - if:
+    - condition: sun
+      after: sunset
+      after_offset: -01:00:00
+    - condition: time
+      before: '22:00:00'
+    then:
+    - type: turn_on
+      device_id: 1d38363f9fb4b2abbf85a291847a05d3
+      entity_id: 446f762a06208759f7de7cef84f65786
+      domain: light
+      brightness_pct: 70
+  - if:
+    - condition: time
+      after: '22:00:00'
+    then:
+    - type: turn_on
+      device_id: 1d38363f9fb4b2abbf85a291847a05d3
+      entity_id: 446f762a06208759f7de7cef84f65786
+      domain: light
+      brightness_pct: 25
+  - if:
+    - condition: sun
+      before: sunrise
+      before_offset: 01:00
+    then:
+    - type: turn_on
+      device_id: 1d38363f9fb4b2abbf85a291847a05d3
+      entity_id: 446f762a06208759f7de7cef84f65786
+      domain: light
+      brightness_pct: 25
+  - service: input_boolean.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.hallautoon
+  mode: single
+- id: '1704997596929'
+  alias: Hall light off
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 82b084737b0fd0e848055421f571758f
+    entity_id: cee1e46d4d26c09366bdddc5ecda5f20
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 1
+  condition:
+  - condition: state
+    entity_id: input_boolean.hallautoon
+    state: 'on'
+  action:
+  - type: turn_off
+    device_id: 1d38363f9fb4b2abbf85a291847a05d3
+    entity_id: 446f762a06208759f7de7cef84f65786
+    domain: light
+  - service: input_boolean.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.hallautoon
+  mode: single
+- id: '1705089745737'
+  alias: Hall Light - Notify when dead
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 1d38363f9fb4b2abbf85a291847a05d3
+    domain: zwave_js
+    type: state.node_status
+    entity_id: e56a48eb4f9c2cd1cb3e06ea632ed99d
+    from: alive
+    to: dead
+  condition: []
+  action:
+  - service: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      message: Hall light has gone dead
+    enabled: false
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - service: zwave_js.ping
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.hall_light
+  mode: single
+- id: '1705154479632'
+  alias: Start Night Scene
+  description: ''
+  trigger:
+  - platform: time
+    at: 01:55:00
+    enabled: false
+  - platform: state
+    entity_id:
+    - binary_sensor.night
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: or
+    conditions:
+    - condition: zone
+      entity_id: device_tracker.shawn_pixel_6a
+      zone: zone.home
+      enabled: false
+    - condition: zone
+      entity_id: device_tracker.mike_pixel_6a
+      zone: zone.home
+      enabled: false
+    enabled: false
+  action:
+  - service: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.night
+  mode: single
+- id: '1705286259429'
+  alias: Start Day Scene
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunrise
+    offset: 00:45:00
+    enabled: false
+  - platform: state
+    entity_id:
+    - binary_sensor.daytime
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: or
+    conditions:
+    - condition: zone
+      entity_id: device_tracker.mike_pixel_6a
+      zone: zone.home
+    - condition: zone
+      entity_id: device_tracker.shawn_pixel_6a
+      zone: zone.home
+    enabled: false
+  - condition: numeric_state
+    entity_id: zone.home
+    above: 0
+  action:
+  - service: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.daytime
+  mode: single
+- id: '1705335533463'
+  alias: Someone Comes Home
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - zone.home
+    above: 0
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: sun
+        after: sunrise
+        after_offset: 00:45:00
+        enabled: false
+      - condition: time
+        before: '15:10:00'
+        enabled: false
+      - condition: state
+        entity_id: binary_sensor.daytime
+        state: 'on'
+      sequence:
+      - service: scene.turn_on
+        metadata: {}
+        target:
+          entity_id: scene.daytime
+      - service: climate.set_temperature
+        metadata: {}
+        data:
+          temperature: 75
+        target:
+          device_id: c2c253e01bd91fde858511f21159e17d
+    - conditions:
+      - condition: time
+        before: '23:00:00'
+        after: '15:10:00'
+        enabled: false
+      - condition: state
+        entity_id: binary_sensor.evening
+        state: 'on'
+      sequence:
+      - service: scene.turn_on
+        metadata: {}
+        target:
+          entity_id: scene.new_scene
+      - service: climate.set_temperature
+        metadata: {}
+        data:
+          temperature: 75
+        target:
+          device_id: c2c253e01bd91fde858511f21159e17d
+    - conditions:
+      - condition: time
+        after: '23:00:00'
+        enabled: false
+      - condition: state
+        entity_id: binary_sensor.late_evening_1
+        state: 'on'
+      sequence:
+      - service: scene.turn_on
+        metadata: {}
+        target:
+          entity_id: scene.late_evening
+      - service: light.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: light.lamp1_light
+    - conditions:
+      - condition: time
+        before: 01:55:00
+        enabled: false
+      sequence:
+      - service: scene.turn_on
+        metadata: {}
+        target:
+          entity_id: scene.late_evening
+    - conditions:
+      - condition: time
+        after: 01:55:00
+        enabled: false
+      - condition: sun
+        before: sunrise
+        before_offset: 00:45:00
+        enabled: false
+      - condition: state
+        entity_id: binary_sensor.night
+        state: 'on'
+      sequence:
+      - service: scene.turn_on
+        metadata: {}
+        target:
+          entity_id: scene.late_evening
+  mode: single
+- id: '1705336892653'
+  alias: Everyone left
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - zone.home
+    below: 1
+  condition: []
+  action:
+  - service: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.daytime_duplicate
+  - service: climate.set_temperature
+    metadata: {}
+    data:
+      hvac_mode: heat
+      temperature: 67
+    target:
+      device_id: c2c253e01bd91fde858511f21159e17d
+    enabled: false
+  - service: climate.set_temperature
+    metadata: {}
+    data:
+      hvac_mode: cool
+      temperature: 77
+    target:
+      device_id: c2c253e01bd91fde858511f21159e17d
+  mode: single
+- id: '1705802315644'
+  alias: Lower Foyer Light On
+  description: ''
+  trigger:
+  - type: turned_on
+    platform: device
+    device_id: fd5688bbb6d34623dd2f5bd965d6a6eb
+    entity_id: 2a6ff80a542085eb1750e09417db1b50
+    domain: binary_sensor
+  - type: motion
+    platform: device
+    device_id: a5643204ba799f12223ab1765dc2e1b7
+    entity_id: 7481a5dd271c4302f114c8cdae97306f
+    domain: binary_sensor
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: sun
+        after: sunrise
+        after_offset: 00:45:00
+        enabled: false
+      - condition: time
+        before: '15:10:00'
+        enabled: false
+      - condition: state
+        entity_id: binary_sensor.daytime
+        state: 'on'
+      sequence:
+      - device_id: 3ccbddadf4239c769b72f74c1841e73e
+        domain: number
+        entity_id: cf1f60edb6a95f026399d949caca922c
+        type: set_value
+        value: 100
+      - service: light.turn_on
+        metadata: {}
+        data:
+          transition: 2
+          brightness_pct: 100
+        target:
+          device_id: 3ccbddadf4239c769b72f74c1841e73e
+    - conditions:
+      - condition: time
+        after: '15:10:00'
+        before: '18:00:00'
+        enabled: false
+      - condition: state
+        entity_id: binary_sensor.evening
+        state: 'on'
+      sequence:
+      - service: light.turn_on
+        metadata: {}
+        data:
+          transition: 2
+          brightness_pct: 50
+        target:
+          device_id: 3ccbddadf4239c769b72f74c1841e73e
+    - conditions:
+      - condition: sun
+        before: sunrise
+        before_offset: 00:45:00
+        enabled: false
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: binary_sensor.late_evening_1
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.night
+          state: 'on'
+      sequence:
+      - service: light.turn_on
+        metadata: {}
+        data:
+          transition: 2
+          brightness_pct: 10
+        target:
+          device_id: 3ccbddadf4239c769b72f74c1841e73e
+  - service: input_boolean.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.remindaboutlaundry
+  mode: single
+- id: '1705802846657'
+  alias: Lower Foyer Light Off
+  description: ''
+  trigger:
+  - type: turned_off
+    platform: device
+    device_id: fd5688bbb6d34623dd2f5bd965d6a6eb
+    entity_id: 2a6ff80a542085eb1750e09417db1b50
+    domain: binary_sensor
+  - type: no_motion
+    platform: device
+    device_id: a5643204ba799f12223ab1765dc2e1b7
+    entity_id: 7481a5dd271c4302f114c8cdae97306f
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: light.turn_off
+    metadata: {}
+    data:
+      transition: 5
+    target:
+      device_id: 3ccbddadf4239c769b72f74c1841e73e
+  mode: single
+- id: '1705932502790'
+  alias: Notify - Low Humidity
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - climate.sensi_thermostat
+    attribute: current_humidity
+    below: 49.9
+  condition: []
+  action:
+  - service: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      message: Humidity below 50%
+  mode: single
+- id: '1705932763580'
+  alias: Porch Lights Off
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunrise
+    offset: -00:20:00
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 5829208fee27eb6a433843619cdb513b
+    entity_id: 85981c6a805db298e542a2db49519285
+    domain: light
+  - type: turn_off
+    device_id: 8f357dc008c756a0c7befc6f753ee9ca
+    entity_id: 1b25db48c7bbc38acae876b858d2e396
+    domain: light
+  - type: turn_off
+    device_id: f74c162ab05297da35f890646c69505c
+    entity_id: d00057719718d105198df6fc5d1d88c5
+    domain: light
+  mode: single
+- id: '1706060099298'
+  alias: Landscaping Lights - Off
+  description: ''
+  trigger:
+  - platform: time
+    at: 02:00:00
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 9d12c80ee92878bba239c5fc5699926d
+    entity_id: 342ae966cd82e31e39ad29bbbc2a3101
+    domain: switch
+  mode: single
+- id: '1706062630467'
+  alias: Landscaping Lights - On
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: 00:30:00
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 9d12c80ee92878bba239c5fc5699926d
+    entity_id: 342ae966cd82e31e39ad29bbbc2a3101
+    domain: switch
+  - type: turn_on
+    device_id: f74c162ab05297da35f890646c69505c
+    entity_id: d00057719718d105198df6fc5d1d88c5
+    domain: light
+    brightness_pct: 25
+  - type: turn_on
+    device_id: 5829208fee27eb6a433843619cdb513b
+    entity_id: 85981c6a805db298e542a2db49519285
+    domain: light
+    brightness_pct: 25
+  - service: light.turn_on
+    metadata: {}
+    data:
+      brightness_pct: 25
+    target:
+      device_id: 8f357dc008c756a0c7befc6f753ee9ca
+  mode: single
+- id: '1706460125015'
+  alias: Start Movietime
+  description: ''
+  trigger: []
+  condition: []
+  action:
+  - service: scene.turn_on
+    metadata: {}
+    target:
+      entity_id: scene.movie_time
+  mode: single
+- id: '1706550209666'
+  alias: Shawn Left School
+  description: ''
+  use_blueprint:
+    path: homeassistant/notify_leaving_zone.yaml
+    input:
+      person_entity: person.shawn_derousse
+      zone_entity: zone.school
+      notify_device: 3dcf40063e5611d33f788c6a60256c87
+- id: '1706622456652'
+  alias: Shawn Arrived
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: person.shawn_derousse
+    zone: zone.home
+    event: enter
+  condition: []
+  action:
+  - service: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      message: Shawn arrived
+  - type: turn_on
+    device_id: 150a74da55af06b00ef1406b2f13e56b
+    entity_id: 9b974f7273f25e8839fda7d701000eac
+    domain: switch
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: Shawn's Home!
+  - type: turn_on
+    device_id: 6702c509cc29de049efd71996f5e21b8
+    entity_id: 56aa1dde73fde4d10f3ca07ad33b26ae
+    domain: switch
+  - type: turn_on
+    device_id: 221f6df8ee065d87660f4e2d98cc8964
+    entity_id: deac8380bed9f840d5ee7b92d12e7570
+    domain: switch
+  mode: single
+- id: '1706639541431'
+  alias: Start Work - Office Lamp On
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: ed80edeabe0b8d9ccfef58ecfaf169c1
+    entity_id: 93e4de7f052b333e1f887dff4163ac30
+    domain: binary_sensor
+  condition:
+  - condition: time
+    after: 04:00:00
+    before: 06:00:00
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  action:
+  - type: turn_on
+    device_id: ca3df69b734d4a8e330e649d5846fc2a
+    entity_id: a99c03a0e78258b1262000f74dfae7e7
+    domain: light
+    brightness_pct: 50
+  mode: single
+- id: '1706821946664'
+  alias: Shawn left school 2
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: person.shawn_derousse
+    zone: zone.school
+    event: leave
+  condition: []
+  action:
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: Shawn left
+  mode: single
+- id: '1706822002343'
+  alias: Shawn arrived at school
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: person.shawn_derousse
+    zone: zone.school
+    event: enter
+  condition: []
+  action:
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: Shawn has arrived at school
+      target:
+      - office
+      - our bedroom
+    enabled: false
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: Shawn has arrived at school
+  - device_id: ca3df69b734d4a8e330e649d5846fc2a
+    domain: light
+    entity_id: a99c03a0e78258b1262000f74dfae7e7
+    type: flash
+  mode: single
+- id: '1707245230413'
+  alias: Time to wrap up work
+  description: ''
+  trigger:
+  - platform: time
+    at: '15:55:00'
+  condition:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  action:
+  - service: tts.speak
+    target:
+      entity_id: tts.google_en_com
+    data:
+      cache: true
+      media_player_entity_id: media_player.office_display
+      message: '''{{ ["Stop being a workaholic", "Hey Mike, It''s Miller time", "Go
+        be with your family", "Quit working now"] | random }}''
+
+        '
+  mode: single
+- id: e1cb2b7c-0423-11eb-adc1-0242ac120002
+  alias: NWS Tornado Watch Notification 2
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: tornado_watch_count
+    above: 0
+    id: watch
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: tornado_watch_count
+    below: 1
+    id: cancel
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: watch
+      sequence:
+      - delay:
+          hours: 0
+          minutes: 1
+          seconds: 0
+          milliseconds: 0
+      - service: notify.google_assistant_sdk
+        data:
+          message: '{{ states(''sensor.tornado_watch_details'') }}
+
+            '
+      - service: tts.speak
+        target:
+          entity_id: tts.google_en_com
+        data:
+          cache: true
+          media_player_entity_id: media_player.living_room_hub
+          message: '{{ states(''sensor.tornado_watch_details'') }}
+
+            '
+        enabled: false
+    - conditions:
+      - condition: trigger
+        id: cancel
+      sequence:
+      - service: notify.google_assistant_sdk
+        data:
+          message: Tornado watch no longer in effect for Randolph County
+  mode: single
+- id: '1707537033382'
+  alias: NWS Thunderstorm Watch Notification
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: tstorm_watch_count
+    above: 0
+    id: watch
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: tstorm_watch_count
+    below: 1
+    id: cancel
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: watch
+      sequence:
+      - delay:
+          hours: 0
+          minutes: 1
+          seconds: 0
+          milliseconds: 0
+      - service: notify.google_assistant_sdk
+        data:
+          message: '{{ states(''sensor.tstorm_watch_details'') }}
+
+            '
+        enabled: false
+      - service: tts.speak
+        target:
+          entity_id: tts.google_en_com
+        data:
+          cache: true
+          media_player_entity_id: media_player.living_room_hub
+          message: '{{ states(''sensor.tstorm_watch_details'') }}
+
+            '
+        enabled: false
+      - service: notify.google_assistant_sdk
+        metadata: {}
+        data:
+          message: '{{ states(''sensor.tstorm_watch_details'') }}
+
+            '
+    - conditions:
+      - condition: trigger
+        id: cancel
+      sequence:
+      - service: notify.google_assistant_sdk
+        data:
+          message: Thunderstorm watch no longer in effect for Randolph County
+        enabled: false
+      - service: notify.google_assistant_sdk
+        metadata: {}
+        data:
+          message: Thunderstorm watch no longer in effect for Randolph County
+  mode: single
+- id: '1707537181438'
+  alias: NWS Thunderstorm Warning Notification
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: tstorm_warning_count
+    above: 0
+    id: watch
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: tstorm_warning_count
+    below: 1
+    id: cancel
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: watch
+      sequence:
+      - delay:
+          hours: 0
+          minutes: 1
+          seconds: 0
+          milliseconds: 0
+      - service: notify.google_assistant_sdk
+        data:
+          message: '{{ states(''sensor.tstorm_warning_details'') }}
+
+            '
+      - service: google_assistant_sdk.send_text_command
+        metadata: {}
+        data:
+          command: broadcast,{{ states('sensor.tstorm_warning_details') }}
+        enabled: false
+      - service: tts.speak
+        target:
+          entity_id: tts.google_en_com
+        data:
+          cache: true
+          media_player_entity_id: media_player.living_room_hub
+          message: '{{ states(''sensor.tstorm_warning_details'') }}
+
+            '
+        enabled: false
+    - conditions:
+      - condition: trigger
+        id: cancel
+      sequence:
+      - service: notify.google_assistant_sdk
+        data:
+          message: Thunderstorm warning no longer in effect for Randolph County
+  mode: single
+- id: '1707537242170'
+  alias: NWS Tornado Warning Notification
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: tornado_warning_count
+    above: 0
+    id: watch
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: tornado_warning_count
+    below: 1
+    id: cancel
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: watch
+      sequence:
+      - delay:
+          hours: 0
+          minutes: 1
+          seconds: 0
+          milliseconds: 0
+      - service: notify.google_assistant_sdk
+        data:
+          message: '{{ states(''sensor.tornado_warning_details'') }}
+
+            '
+      - service: tts.speak
+        target:
+          entity_id: tts.google_en_com
+        data:
+          cache: true
+          media_player_entity_id: media_player.living_room_hub
+          message: '{{ states(''sensor.tornado_warning_details'') }}
+
+            '
+        enabled: false
+    - conditions:
+      - condition: trigger
+        id: cancel
+      sequence:
+      - service: notify.google_assistant_sdk
+        data:
+          message: Tornado warning no longer in effect for Randolph County
+  mode: single
+- id: '1707537314410'
+  alias: NWS Test Notification
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: test_count
+    above: 0
+    id: watch
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: test_count
+    below: 1
+    id: cancel
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: watch
+      sequence:
+      - service: notify.google_assistant_sdk
+        data:
+          message: '{{ states(''sensor.weather_test_details'') }}
+
+            '
+      - service: tts.speak
+        target:
+          entity_id: tts.google_en_com
+        data:
+          cache: true
+          media_player_entity_id: media_player.living_room_hub
+          message: '{{ states(''sensor.weather_test_details'') }}
+
+            '
+        enabled: false
+    - conditions:
+      - condition: trigger
+        id: cancel
+      sequence:
+      - service: notify.google_assistant_sdk
+        data:
+          message: Weather Test no longer in effect for Randolph County
+  mode: single
+- id: '1707537384959'
+  alias: NWS Advisory Notification
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: advisory_count
+    above: 0
+    id: watch
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: advisory_count
+    below: 1
+    id: cancel
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: watch
+      sequence:
+      - service: notify.google_assistant_sdk
+        data:
+          message: '{{ states(''sensor.weather_advisory_details'') }}
+
+            '
+      - service: tts.speak
+        target:
+          entity_id: tts.google_en_com
+        data:
+          cache: true
+          media_player_entity_id: media_player.living_room_hub
+          message: '{{ states(''sensor.weather_advisory_details'') }}
+
+            '
+        enabled: false
+    - conditions:
+      - condition: trigger
+        id: cancel
+      sequence:
+      - service: notify.google_assistant_sdk
+        data:
+          message: Weather Advisory no longer in effect for Randolph County
+  mode: single
+- id: '1707537439689'
+  alias: NWS Statement Notification
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: statement_count
+    above: 0
+    id: watch
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: statement_count
+    below: 1
+    id: cancel
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: watch
+      sequence:
+      - service: notify.google_assistant_sdk
+        data:
+          message: '{{ states(''sensor.weather_statement_details'') }}
+
+            '
+      - service: tts.speak
+        target:
+          entity_id: tts.google_en_com
+        data:
+          cache: true
+          media_player_entity_id: media_player.living_room_hub
+          message: '{{ states(''sensor.weather_statement_details'') }}
+
+            '
+        enabled: false
+    - conditions:
+      - condition: trigger
+        id: cancel
+      sequence:
+      - service: notify.google_assistant_sdk
+        data:
+          message: Weather Statement no longer in effect for Randolph County
+  mode: single
+- id: '1708440657946'
+  alias: Office Lamp Off when bright
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.4_in_1_sensor_illuminance
+    above: 80
+  condition:
+  - condition: state
+    entity_id: input_boolean.mikeisworking
+    state: 'on'
+  - condition: device
+    type: is_off
+    device_id: 41e1a2654c488b6bd1dd4e508f66dfa1
+    entity_id: 94faca77c06b28fecda23af7564683a7
+    domain: light
+    enabled: false
+  - condition: device
+    type: is_off
+    device_id: 708f9d1ddce5193522c00e2f01faa207
+    entity_id: d8cac60486f783c9d4a2bd67f789a061
+    domain: light
+  action:
+  - type: turn_off
+    device_id: ca3df69b734d4a8e330e649d5846fc2a
+    entity_id: a99c03a0e78258b1262000f74dfae7e7
+    domain: light
+    enabled: false
+  - service: light.turn_off
+    metadata: {}
+    data:
+      transition: 60
+    target:
+      device_id: ca3df69b734d4a8e330e649d5846fc2a
+  mode: single
+- id: '1708440747335'
+  alias: Office Lamp On when not bright
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.4_in_1_sensor_illuminance
+    below: 80
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_boolean.mikeisworking
+      state: 'on'
+    - condition: zone
+      entity_id: person.mike_derousse
+      zone: zone.home
+  action:
+  - type: turn_on
+    device_id: ca3df69b734d4a8e330e649d5846fc2a
+    entity_id: a99c03a0e78258b1262000f74dfae7e7
+    domain: light
+    enabled: false
+  - service: light.turn_on
+    metadata: {}
+    data:
+      transition: 60
+      brightness_pct: 60
+    target:
+      device_id: ca3df69b734d4a8e330e649d5846fc2a
+  mode: single
+- id: '1708775454920'
+  alias: Hall Light - Ping on schedule
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /15
+  condition:
+  - condition: device
+    device_id: 1d38363f9fb4b2abbf85a291847a05d3
+    domain: zwave_js
+    type: node_status
+    status: dead
+  action:
+  - service: zwave_js.ping
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.hall_light
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - type: turn_off
+    device_id: 1d38363f9fb4b2abbf85a291847a05d3
+    entity_id: 446f762a06208759f7de7cef84f65786
+    domain: light
+  - service: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      message: Fixed the hall light!
+  mode: single
+- id: '1711329036769'
+  alias: Lightning detected
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.blitzortung_lightning_counter
+    above: 0
+    enabled: false
+  - platform: state
+    entity_id:
+    - sensor.blitzortung_lightning_counter
+    from: '0'
+    to: '1'
+  condition: []
+  action:
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: Lightning detected within 25 miles
+  - service: google_assistant_sdk.send_text_command
+    metadata: {}
+    data:
+      command:
+      - broadcast
+      - Lightning detected within 25 miles
+    enabled: false
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: Please inform Alex that it has started raining outside.
+    enabled: false
+  mode: single
+- id: '1711977422170'
+  alias: Logger Level Update
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_select.logger_level
+  condition: []
+  action:
+  - service: logger.set_level
+    data:
+      homeassistant.components: '{{ states(''input_select.logger_level'') }}'
+  mode: single
+- id: '1712253273588'
+  alias: Notify Lamp1 Unavailable
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /5
+  - platform: event
+    event_type: zha_toolkit_last_seen_monitor
+    event_data:
+      command: zha_devices
+      success: true
+      params:
+        event_success: zha_toolkit_last_seen_monitor
+    id: event
+  condition: []
+  action:
+  - service: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      message: Lamp1 Unavailable - Zigbee Down?
+  mode: single
+- id: '1682291917918'
+  alias: last seen monitor
+  description: ''
+  trigger:
+  - platform: time_pattern
+    id: time
+    enabled: true
+    minutes: /5
+  - platform: event
+    event_type: zha_toolkit_last_seen_monitor
+    event_data:
+      command: zha_devices
+      success: true
+      params:
+        event_success: zha_toolkit_last_seen_monitor
+    id: event
+  condition:
+  - condition: template
+    value_template: '{{ as_timestamp(now()) - as_timestamp(states.sensor.uptime.last_changed)
+      | int > 600 }}'
+    enabled: true
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: time
+      sequence:
+      - service: zha_toolkit.zha_devices
+        data:
+          event_success: zha_toolkit_last_seen_monitor
+          command_data:
+          - entities
+          - power_source
+          - last_seen
+          - available
+    - conditions:
+      - condition: trigger
+        id: event
+      sequence:
+      - service: python_script.last_seen_monitor
+        data:
+          devices: '{{ trigger.event.data.devices }}'
+          helper: input_text.last_seen_monitor
+          timeout_seconds: 300
+  mode: queued
+  max: 2
+- id: '1713323257725'
+  alias: 'Notify - Washing Machine Done '
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.washing_machine_power
+    below: 5
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition:
+  - condition: time
+    after: 08:00:00
+  action:
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: The washing machine has finished the load
+  - service: input_boolean.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.remindaboutlaundry
+  - service: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      message: Laundry Machine Done
+  mode: single
+- id: '1713385064459'
+  alias: Remind - Laundry Done
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /15
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: input_boolean.remindaboutlaundry
+      state: 'on'
+    - condition: time
+      after: 08:00:00
+      before: '22:00:00'
+  action:
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: Don't Forget. The washing machine has finished the load
+    enabled: true
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: '''{{ ["Don''t Forget. The washing machine has finished the load",
+        "Yo! Is someone going to take care of the laundry?", "Have you forgotten that
+        the washing machine is done?", "C''mon guys - The laundry is waiting for you."]
+        | random }}''
+
+        '
+    enabled: false
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: '''{{ ["I would like to kindly remind the most beautiful lady of the
+        house that her laundry is patiently waiting for her tender, youthful hands
+        to transfer the clothes to the dryer. This is a message from your humble home
+        assistant.","Please remember to take care of the laundry"] | random }}''
+
+        '
+    enabled: false
+  mode: single
+- id: '1714586113784'
+  alias: Check Weather Test
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.randolph_active_alerts
+    attribute: test_count
+    above: 0
+  condition: []
+  action:
+  - service: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      message: Weather Alert Test Count is above 0
+  mode: single
+- id: '1715869428616'
+  alias: Notify - Rain Detected
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.rainsensor_flips
+    above: 0
+  condition: []
+  action:
+  - service: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      message: Rain detected!
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: Please inform Alex that it has started raining outside.
+    enabled: false
+  mode: single
+- id: '1718652466005'
+  alias: Notify - Water leak in garage
+  description: ''
+  trigger:
+  - type: moist
+    platform: device
+    device_id: 7e581030acb9740732e6b544903f8371
+    entity_id: 6fb6229021a2d0473b39a71e8d42bba1
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: A water leak has been detected in the garage - please investigate immediately!
+    enabled: true
+  - service: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      message: Water detected in garage!
+  - service: notify.mobile_app_mike_pixel_6a
+    data:
+      message: command_activity
+      data:
+        intent_package_name: com.google.android.deskclock
+        intent_action: android.intent.action.SET_TIMER
+        intent_extras: android.intent.extra.alarm.SKIP_UI:true,android.intent.extra.alarm.LENGTH:1
+  mode: single
+- id: '1718652682349'
+  alias: Remind - Water leak in garage
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /5
+  condition:
+  - type: is_moist
+    condition: device
+    device_id: 7e581030acb9740732e6b544903f8371
+    entity_id: 6fb6229021a2d0473b39a71e8d42bba1
+    domain: binary_sensor
+  action:
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: Don't Forget. A water leak has been detected in the garage!
+    enabled: true
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: '''{{ ["Don''t Forget. The washing machine has finished the load",
+        "Yo! Is someone going to take care of the laundry?", "Have you forgotten that
+        the washing machine is done?", "C''mon guys - The laundry is waiting for you."]
+        | random }}''
+
+        '
+    enabled: false
+  - service: notify.google_assistant_sdk
+    metadata: {}
+    data:
+      message: '''{{ ["I would like to kindly remind the most beautiful lady of the
+        house that her laundry is patiently waiting for her tender, youthful hands
+        to transfer the clothes to the dryer. This is a message from your humble home
+        assistant.","Please remember to take care of the laundry"] | random }}''
+
+        '
+    enabled: false
+  mode: single
+- id: '1718929636464'
+  alias: Test - Toggle Lamp 2
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 4909a60d4e2e90cce5a6e73bea6f5ed4
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '001'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 001
+  condition: []
+  action:
+  - type: toggle
+    device_id: 708f9d1ddce5193522c00e2f01faa207
+    entity_id: d8cac60486f783c9d4a2bd67f789a061
+    domain: light
+  - type: turn_off
+    device_id: 4909a60d4e2e90cce5a6e73bea6f5ed4
+    entity_id: c2678343ebd99b1e0dd2df9a410f2654
+    domain: switch
+    enabled: false
+  mode: single
+- id: '1718930705032'
+  alias: Test - Turn on Lamp 2 Indicator
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_off
+    device_id: 708f9d1ddce5193522c00e2f01faa207
+    entity_id: d8cac60486f783c9d4a2bd67f789a061
+    domain: light
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 4909a60d4e2e90cce5a6e73bea6f5ed4
+    entity_id: 3c52ee3f141ef727ef3da04c16cc02ad
+    domain: switch
+  mode: single
+- id: '1718930733756'
+  alias: Test - Turn off Lamp 2 Indiator
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_on
+    device_id: 708f9d1ddce5193522c00e2f01faa207
+    entity_id: d8cac60486f783c9d4a2bd67f789a061
+    domain: light
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 4909a60d4e2e90cce5a6e73bea6f5ed4
+    entity_id: 3c52ee3f141ef727ef3da04c16cc02ad
+    domain: switch
+  mode: single
+- id: '1718931357146'
+  alias: Test - Toggle Lamp 1
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 4909a60d4e2e90cce5a6e73bea6f5ed4
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '002'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 002
+  condition: []
+  action:
+  - type: toggle
+    device_id: 41e1a2654c488b6bd1dd4e508f66dfa1
+    entity_id: 94faca77c06b28fecda23af7564683a7
+    domain: light
+  - type: turn_off
+    device_id: 4909a60d4e2e90cce5a6e73bea6f5ed4
+    entity_id: c2678343ebd99b1e0dd2df9a410f2654
+    domain: switch
+    enabled: false
+  mode: single
+- id: '1718931577577'
+  alias: Test - Turn off Lamp 1 Indicator
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_on
+    device_id: 41e1a2654c488b6bd1dd4e508f66dfa1
+    entity_id: 94faca77c06b28fecda23af7564683a7
+    domain: light
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 4909a60d4e2e90cce5a6e73bea6f5ed4
+    entity_id: fff724535aa6251228e7c231b32cdfeb
+    domain: switch
+  mode: single
+- id: '1718931624097'
+  alias: Test - Turn on Lamp 1 Indicator
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_off
+    device_id: 41e1a2654c488b6bd1dd4e508f66dfa1
+    entity_id: 94faca77c06b28fecda23af7564683a7
+    domain: light
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 4909a60d4e2e90cce5a6e73bea6f5ed4
+    entity_id: fff724535aa6251228e7c231b32cdfeb
+    domain: switch
+  mode: single
+- id: '1718931900943'
+  alias: Test - Toggle TV
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 4909a60d4e2e90cce5a6e73bea6f5ed4
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '005'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 005
+    value: 2
+  condition: []
+  action:
+  - type: toggle
+    device_id: 153bbcefb75b835afc106c3190a9ad60
+    entity_id: c8abb58b756fab0b72d13bab2cbf2f66
+    domain: switch
+  mode: single
+- id: '1719058715611'
+  alias: LivingRoom Zen32 Behavior
+  description: ''
+  use_blueprint:
+    path: rwalker777/ZEN32-control-track.yaml
+    input:
+      zooz_switch: 4909a60d4e2e90cce5a6e73bea6f5ed4
+      scene_5h:
+      - type: toggle
+        device_id: 153bbcefb75b835afc106c3190a9ad60
+        entity_id: c8abb58b756fab0b72d13bab2cbf2f66
+        domain: switch
+        enabled: false
+      - device_id: 153bbcefb75b835afc106c3190a9ad60
+        domain: select
+        entity_id: 5c750dda7c6a9bad722cab4746beaeba
+        type: select_option
+        option: Watch Chromecast
+        enabled: false
+      - if:
+        - condition: device
+          device_id: 153bbcefb75b835afc106c3190a9ad60
+          domain: select
+          entity_id: 5c750dda7c6a9bad722cab4746beaeba
+          type: selected_option
+          option: power_off
+        then:
+        - device_id: 153bbcefb75b835afc106c3190a9ad60
+          domain: select
+          entity_id: 5c750dda7c6a9bad722cab4746beaeba
+          type: select_option
+          option: Watch Chromecast
+        else:
+        - device_id: 153bbcefb75b835afc106c3190a9ad60
+          domain: select
+          entity_id: 5c750dda7c6a9bad722cab4746beaeba
+          type: select_option
+          option: power_off
+      - if:
+        - condition: device
+          device_id: 153bbcefb75b835afc106c3190a9ad60
+          domain: select
+          entity_id: 5c750dda7c6a9bad722cab4746beaeba
+          type: selected_option
+          option: power_off
+        then:
+        - device_id: 153bbcefb75b835afc106c3190a9ad60
+          domain: select
+          entity_id: 5c750dda7c6a9bad722cab4746beaeba
+          type: select_option
+          option: Watch Chromecast
+        enabled: false
+      scene_1:
+      - type: toggle
+        device_id: 708f9d1ddce5193522c00e2f01faa207
+        entity_id: d8cac60486f783c9d4a2bd67f789a061
+        domain: light
+      input_entity1: light.lamp2_light
+      scene_2:
+      - type: toggle
+        device_id: 41e1a2654c488b6bd1dd4e508f66dfa1
+        entity_id: 94faca77c06b28fecda23af7564683a7
+        domain: light
+      input_entity2: light.lamp1_light
+      p20_relay_led_report: '1'
+      schedule_start: '22:00:00'
+      schedule_stop: 06:00:00
+      night_led_brightness: '2'

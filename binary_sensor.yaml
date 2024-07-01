@@ -1,0 +1,32 @@
+- platform: tod #Time of Day
+  name: Daytime
+  after: sunrise
+  after_offset: "00:45"
+  before: "15:10"
+
+- platform: tod #Time of Day
+  name: Evening
+  after: "15:10"
+  before: "23:00"
+
+- platform: tod #Time of Day
+  name: Late Evening 1
+  after: "23:00"
+  before: "01:55"
+
+- platform: tod #Time of Day
+  name: Late Evening 2
+  after: "00:00"
+  before: "01:55"
+
+- platform: tod #Time of Day
+  name: Night
+  after: "01:55"
+  before: sunrise
+  before_offset: "00:45"
+
+- platform: trend
+  sensors:
+    rainfall_trend:
+      entity_id: sensor.rainfall_today
+      max_samples: 2

@@ -1,0 +1,77 @@
+-== Watchman Report ==- 
+
+-== Congratulations, all 22 services from your config are available!
+
+-== Missing 27 entity(ies) from 136 found in your config:
++--------------------------------+---------+--------------------------------------------------------------+
+| Entity ID                      | State   | Location                                                     |
++--------------------------------+---------+--------------------------------------------------------------+
+| switch.ben_s_room_motion_detec | unavail | configuration.yaml:75                                        |
+| tion ('Ben's Room Motion       |         |                                                              |
+| Detection')                    |         |                                                              |
+| switch.ben_s_room_notification | unavail | configuration.yaml:77                                        |
+| s ('Ben's Room Notifications') |         |                                                              |
+| switch.ben_s_room_power        | unavail | configuration.yaml:79                                        |
+| ('Ben's Room Power')           |         |                                                              |
+| switch.christmas_tree_spare_pl | missing | configuration.yaml:81                                        |
+| ug_3                           |         |                                                              |
+| switch.outdoor_cam_1_motion_de | unavail | configuration.yaml:99                                        |
+| tection ('Outdoor cam 1 Motion |         |                                                              |
+| Detection')                    |         |                                                              |
+| switch.outdoor_cam_1_notificat | unavail | configuration.yaml:101                                       |
+| ions ('Outdoor cam 1           |         |                                                              |
+| Notifications')                |         |                                                              |
+| switch.outdoor_cam_1_power     | unavail | configuration.yaml:103                                       |
+| ('Outdoor cam 1 Power')        |         |                                                              |
+| light.mike_s_lamp              | missing | scenes.yaml:115,159,215,349                                  |
+| switch.m_switch                | missing | scenes.yaml:122,166,222,356                                  |
+| alert.event                    | missing | packages/weatheralerts.yaml:74,84,94,104,114,124,134,144,154 |
+|                                |         | ,164,174,184,194,194,194,204                                 |
+| sensor.randolph_alert_1_most_r | unavail | packages/weatheralerts.yaml:1870,1872,1874,1879,1886,1888,18 |
+| ecent_active_alert ('randolph_ |         | 90,1895,1899,1901,1903,1908,1911,1913,1915,1920              |
+| alert_1_most_recent_active_ale |         |                                                              |
+| rt')                           |         |                                                              |
+| sensor.randolph_alert_2_most_r | unavail | packages/weatheralerts.yaml:2054,2056,2058,2063,2070,2072,20 |
+| ecent_active_alert ('randolph_ |         | 74,2079,2083,2085,2087,2092,2095,2097,2099,2104              |
+| alert_2_most_recent_active_ale |         |                                                              |
+| rt')                           |         |                                                              |
+| sensor.randolph_alert_3_most_r | unavail | packages/weatheralerts.yaml:2238,2240,2242,2247,2254,2256,22 |
+| ecent_active_alert ('randolph_ |         | 58,2263,2267,2269,2271,2276,2279,2281,2283,2288              |
+| alert_3_most_recent_active_ale |         |                                                              |
+| rt')                           |         |                                                              |
+| sensor.randolph_alert_4_most_r | unavail | packages/weatheralerts.yaml:2422,2424,2426,2431,2438,2440,24 |
+| ecent_active_alert ('randolph_ |         | 42,2447,2451,2453,2455,2460,2463,2465,2467,2472              |
+| alert_4_most_recent_active_ale |         |                                                              |
+| rt')                           |         |                                                              |
+| sensor.randolph_alert_5_most_r | unavail | packages/weatheralerts.yaml:2606,2608,2610,2615,2622,2624,26 |
+| ecent_active_alert ('randolph_ |         | 26,2631,2635,2637,2639,2644,2647,2649,2651,2656              |
+| alert_5_most_recent_active_ale |         |                                                              |
+| rt')                           |         |                                                              |
+| sensor.randolph_alert_1_last_c | unknown | packages/weatheralerts.yaml:2794,2879                        |
+| hanged ('randolph_alert_1_last |         |                                                              |
+| _changed')                     |         |                                                              |
+| light.bed_light                | missing | www/community/lovelace-layout-card/test/lovelace/card-       |
+|                                |         | list.yaml:4,8,12,16,22,26,30,34                              |
+| light.ceiling_lights           | missing | www/community/lovelace-layout-card/test/lovelace/card-       |
+|                                |         | list.yaml:17                                                 |
+| light.kitchen_lights           | missing | www/community/lovelace-layout-card/test/lovelace/card-       |
+|                                |         | list.yaml:18                                                 |
+| sensor.example                 | missing | custom_components/zha_toolkit/services.yaml:189,525,698,1544 |
+| switch.schedule_abcdef         | missing | custom_components/scheduler/services.yaml:8,35,100,160       |
+| light.my_lamp                  | missing | custom_components/scheduler/services.yaml:70,130             |
+| light.lifx_color_bulb          | unavail | .storage/lovelace.dashboard_test1:24                         |
+| light.mike_s_lamp_light        | missing | .storage/lovelace.dashboard_test1:71                         |
+| sensor.lower_foyer_motion_sens | unavail | .storage/lovelace.dashboard_mushroom:793,841,1316            |
+| or_2_temperature ('Lower Foyer |         |                                                              |
+| Motion Sensor 2 Temperature')  |         |                                                              |
+| binary_sensor.lower_foyer_moti | unavail | .storage/lovelace.dashboard_mushroom:828                     |
+| on_sensor_2_motion ('Lower     |         |                                                              |
+| Foyer Motion Sensor 2 Motion') |         |                                                              |
+| button.lower_foyer_motion_sens | unavail | .storage/lovelace.dashboard_mushroom:834                     |
+| or_2_identify ('Lower Foyer    |         |                                                              |
+| Motion Sensor 2 Identify')     |         |                                                              |
++--------------------------------+---------+--------------------------------------------------------------+
+
+-== Report created on 25 Apr 2024 09:38:04
+-== Parsed 31 files in 1.08s., ignored 0 files 
+-== Generated in: 0.03s. Validated in: 0.00s.

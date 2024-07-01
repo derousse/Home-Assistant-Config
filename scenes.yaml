@@ -1,0 +1,352 @@
+- id: '1704987234492'
+  name: Evening
+  entities:
+    light.kitchen_cabinets:
+      effect_list:
+      - Solid
+      - Wake up
+      - Cycle up
+      - Cycle down
+      - Random
+      supported_color_modes:
+      - hs
+      effect: Solid
+      color_mode: hs
+      brightness: 255
+      hs_color:
+      - 51
+      - 60
+      rgb_color:
+      - 255
+      - 232
+      - 102
+      xy_color:
+      - 0.443
+      - 0.453
+      friendly_name: Kitchen Cabinets
+      supported_features: 36
+      state: 'on'
+    switch.living_room_accent_lights:
+      friendly_name: 'Living Room Accent Lights '
+      state: 'on'
+    switch.shawn_s_lamp:
+      IP: 192.168.1.163
+      RSSI: '-64'
+      SSID: mach8
+      friendly_name: Shawn's Lamp
+      state: 'on'
+    switch.ben_s_lamp:
+      IP: 192.168.1.160
+      RSSI: '-51'
+      SSID: mach8
+      friendly_name: Ben's Lamp
+      state: 'on'
+    light.office_lamp_light:
+      supported_color_modes:
+      - brightness
+      color_mode: brightness
+      brightness: 128
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Office Lamp Light
+      supported_features: 40
+      state: 'on'
+    light.lamp1_light:
+      supported_color_modes:
+      - brightness
+      color_mode: brightness
+      brightness: 250
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Lamp1 Light
+      supported_features: 40
+      state: 'on'
+    light.lamp2_light:
+      supported_color_modes:
+      - brightness
+      color_mode: brightness
+      brightness: 250
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Lamp2 Light
+      supported_features: 40
+      state: 'on'
+    switch.mike_s_lamp_switch:
+      friendly_name: Mike's Lamp Switch
+      state: 'on'
+  icon: mdi:weather-sunset
+  metadata: {}
+- id: '1704987657769'
+  name: Late Evening
+  entities:
+    light.kitchen_cabinets:
+      effect_list:
+      - Solid
+      - Wake up
+      - Cycle up
+      - Cycle down
+      - Random
+      supported_color_modes:
+      - hs
+      friendly_name: Kitchen Cabinets
+      supported_features: 36
+      state: 'off'
+    switch.living_room_accent_lights:
+      friendly_name: 'Living Room Accent Lights '
+      state: 'off'
+    light.office_lamp_light:
+      supported_color_modes:
+      - brightness
+      friendly_name: Office Lamp Light
+      supported_features: 40
+      color_mode:
+      brightness:
+      off_with_transition: false
+      off_brightness: 128
+      state: 'off'
+    light.lamp2_light:
+      supported_color_modes:
+      - brightness
+      friendly_name: Lamp2 Light
+      supported_features: 40
+      off_with_transition: false
+      off_brightness: 250
+      state: 'off'
+    light.mike_s_lamp:
+      supported_color_modes:
+      - onoff
+      icon: mdi:lamp
+      friendly_name: Mike's Lamp
+      supported_features: 0
+      state: unavailable
+    switch.m_switch:
+      friendly_name: M Switch
+      state: 'off'
+  icon: mdi:weather-sunset-down
+  metadata: {}
+- id: '1705153791985'
+  name: Daytime
+  entities:
+    light.kitchen_cabinets:
+      effect_list:
+      - Solid
+      - Wake up
+      - Cycle up
+      - Cycle down
+      - Random
+      supported_color_modes:
+      - hs
+      effect:
+      color_mode:
+      brightness:
+      hs_color:
+      rgb_color:
+      xy_color:
+      friendly_name: Kitchen Cabinets
+      supported_features: 36
+      state: 'off'
+    switch.living_room_accent_lights:
+      friendly_name: 'Living Room Accent Lights '
+      state: 'off'
+    light.lamp2_light:
+      supported_color_modes:
+      - brightness
+      color_mode:
+      brightness:
+      off_with_transition: false
+      off_brightness: 250
+      friendly_name: Lamp2 Light
+      supported_features: 40
+      state: 'off'
+  icon: mdi:sun-compass
+  metadata: {}
+- id: '1705154316957'
+  name: Night
+  entities:
+    light.kitchen_cabinets:
+      effect_list:
+      - Solid
+      - Wake up
+      - Cycle up
+      - Cycle down
+      - Random
+      supported_color_modes:
+      - hs
+      friendly_name: Kitchen Cabinets
+      supported_features: 36
+      state: 'off'
+    switch.living_room_accent_lights:
+      friendly_name: 'Living Room Accent Lights '
+      state: 'off'
+    light.office_lamp_light:
+      supported_color_modes:
+      - brightness
+      friendly_name: Office Lamp Light
+      supported_features: 40
+      color_mode:
+      brightness:
+      off_with_transition: false
+      off_brightness: 128
+      state: 'off'
+    light.lamp1_light:
+      supported_color_modes:
+      - brightness
+      friendly_name: Lamp1 Light
+      supported_features: 40
+      off_with_transition: false
+      off_brightness: 250
+      state: 'off'
+    light.lamp2_light:
+      supported_color_modes:
+      - brightness
+      friendly_name: Lamp2 Light
+      supported_features: 40
+      off_with_transition: false
+      off_brightness: 250
+      state: 'off'
+    light.mike_s_lamp:
+      supported_color_modes:
+      - onoff
+      icon: mdi:lamp
+      friendly_name: Mike's Lamp
+      supported_features: 0
+      state: unavailable
+    switch.m_switch:
+      friendly_name: M Switch
+      state: 'off'
+  icon: mdi:weather-night
+  metadata: {}
+- id: '1706460068549'
+  name: Movie Time
+  entities:
+    light.lamp1_light:
+      supported_color_modes:
+      - brightness
+      color_mode: brightness
+      brightness: 3
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Lamp1 Light
+      supported_features: 40
+      state: 'on'
+    light.lamp2_light:
+      supported_color_modes:
+      - brightness
+      color_mode: brightness
+      brightness: 3
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Lamp2 Light
+      supported_features: 40
+      state: 'on'
+  icon: mdi:movie
+  metadata: {}
+- id: '1707010631590'
+  name: Movietime
+  entities:
+    light.lamp1_light:
+      supported_color_modes:
+      - brightness
+      color_mode: brightness
+      brightness: 8
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Lamp1 Light
+      supported_features: 40
+      state: 'on'
+    light.lamp2_light:
+      supported_color_modes:
+      - brightness
+      color_mode: brightness
+      brightness: 5
+      off_with_transition: false
+      off_brightness:
+      friendly_name: Lamp2 Light
+      supported_features: 40
+      state: 'on'
+  icon: mdi:movie
+  metadata: {}
+- id: '1707746086228'
+  name: No One Home
+  entities:
+    light.kitchen_cabinets:
+      effect_list:
+      - Solid
+      - Wake up
+      - Cycle up
+      - Cycle down
+      - Random
+      supported_color_modes:
+      - hs
+      friendly_name: Kitchen Cabinets
+      supported_features: 36
+      state: 'off'
+    switch.living_room_accent_lights:
+      friendly_name: 'Living Room Accent Lights '
+      state: 'off'
+    switch.ben_s_lamp:
+      IP: 192.168.1.160
+      RSSI: '-53'
+      SSID: mach8
+      friendly_name: Ben's Lamp
+      state: 'off'
+    light.lamp2_light:
+      supported_color_modes:
+      - brightness
+      friendly_name: Lamp2 Light
+      supported_features: 40
+      off_with_transition: false
+      off_brightness: 250
+      state: 'off'
+    light.lamp1_light:
+      supported_color_modes:
+      - brightness
+      friendly_name: Lamp1 Light
+      supported_features: 40
+      off_with_transition: false
+      off_brightness: 250
+      state: 'off'
+    switch.shawn_s_lamp:
+      IP: 192.168.1.163
+      RSSI: '-63'
+      SSID: mach8
+      friendly_name: Shawn's Lamp
+      state: 'off'
+    light.hall_light:
+      supported_color_modes:
+      - brightness
+      color_mode:
+      brightness:
+      friendly_name: 'Hall light '
+      supported_features: 32
+      state: 'off'
+    light.lower_foyer_light_light:
+      supported_color_modes:
+      - brightness
+      friendly_name: Lower Foyer Light Light
+      supported_features: 40
+      off_with_transition: true
+      off_brightness: 254
+      state: 'off'
+    light.office_lamp_light:
+      supported_color_modes:
+      - brightness
+      friendly_name: Office Lamp Light
+      supported_features: 40
+      color_mode:
+      brightness:
+      off_with_transition: false
+      off_brightness: 128
+      state: 'off'
+    light.mike_s_lamp:
+      supported_color_modes:
+      - onoff
+      icon: mdi:lamp
+      friendly_name: Mike's Lamp
+      supported_features: 0
+      state: unavailable
+    switch.m_switch:
+      friendly_name: M Switch
+      state: 'off'
+  icon: mdi:home-alert-outline
+  metadata: {}

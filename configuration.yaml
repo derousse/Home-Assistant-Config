@@ -1,0 +1,162 @@
+homeassistant:
+  packages: !include_dir_named packages
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+  extra_module_url:
+    - /local/community/lovelace-card-mod/card-mod.js
+    - /local/community/lovelace-auto-entities/auto-entities.js
+    - /local/community/lovelace-layout-card/layout-card.js
+    - /local/community/lovelace-mushroom/mushroom.js
+
+#    - /hacsfiles/lovelace-card-mod/card-mod.js
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+http:
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
+
+logger:
+  default: info
+#  logs:
+#    homeassistant.core: debug
+#    homeassistant.components.zha: debug
+#    bellows.zigbee.application: debug
+#    bellows.ezsp: debug
+#    zigpy: debug
+#    zigpy_deconz.zigbee.application: debug
+#    zigpy_deconz.api: debug
+#    zigpy_xbee.zigbee.application: debug
+#    zigpy_xbee.api: debug
+#    zigpy_zigate: debug
+#    zigpy_znp: debug
+#    zhaquirks: debug
+
+binary_sensor: !include binary_sensor.yaml
+
+# Convert (Mike's Lamp) sensor power to energy (https://www.home-assistant.io/integrations/integration/#energy)
+sensor:
+  - platform: integration
+    source: sensor.mike_s_desk_power
+    name: mike_s_desk_energy
+    unit_prefix: k
+    round: 2
+
+# Config for Openwrt Luci Integration
+device_tracker:
+  - platform: luci
+    host: 192.168.1.1
+    username: root
+    password: !secret router_password
+
+# Example configuration.yaml entry
+google_assistant:
+  project_id: HomeAssistant
+  service_account: !include SERVICE_ACCOUNT.JSON
+  report_state: true
+  exposed_domains:
+    - switch
+    - light
+  entity_config:
+    light.front_porch_1:
+      expose: false
+    light.front_porch_2:
+      expose: false
+    light.office_lamp_light:
+      expose: true
+      room: office
+    switch.ben_s_room_motion_detection:
+      expose: false
+    switch.ben_s_room_notifications:
+      expose: false
+    switch.ben_s_room_power:
+      expose: false
+    switch.christmas_tree_spare_plug_3:
+      expose: false
+    switch.back_deck_motion_detection:
+      expose: false
+    switch.back_deck_notifications:
+      expose: false
+    switch.driveway_motion_detection:
+      expose: false
+    switch.driveway_notifications:
+      expose: false
+    switch.front_door_motion_detection:
+      expose: false
+    switch.front_door_notifications:
+      expose: false
+    switch.front_yard_2_motion_detection:
+      expose: false
+    switch.front_yard_2_notifications:
+      expose: false
+    switch.outdoor_cam_1_motion_detection:
+      expose: false
+    switch.outdoor_cam_1_notifications:
+      expose: false
+    switch.outdoor_cam_1_power:
+      expose: false
+
+zha_toolkit:
+python_script:
+
+recorder:
+  exclude:
+    entities:
+      - automation.last_seen_monitor
+    event_types:
+      - zha_toolkit_last_seen_monitor
+
+template:
+  - sensor:
+      - name: Rainfall today
+        unit_of_measurement: in
+        state_class: total_increasing
+        unique_id: rainfall_today
+        state: >-
+          {% set count = states('sensor.rainsensor_flips') | int(0) %}
+          {% set inches = count * 0.00324910870946063012 %}
+          {% if count >= 0 %}
+            {{ inches|round(2, 'floor') }}
+          {% endif %}
+        # If you have issues with the history sensor doubling after restarting HA, add the line below (@BigG)
+        availability: "{{ (states('sensor.rainsensor_flips') not in ('unknown', 'unavailable')) }}"
+  - sensor:
+      - name: "Rain intensity"
+        unit_of_measurement: 'mm/h'
+        state_class: measurement
+        unique_id: rainfall_per_hour
+        state: >-
+          {% set rain_hour = ((state_attr('binary_sensor.rainfall_trend', 'gradient') | float(0)) * 3600) | round(1, 'floor') %}
+          {% if rain_hour >= 0 %}
+            {{ rain_hour }}
+          {% else %}
+            {{ 0 }}
+          {% endif %}
+
+utility_meter:
+  rain_week:
+    source: sensor.rainfall_today 
+    cycle: weekly
+    unique_id: rainfall_week
+  rain_month:
+    source: sensor.rainfall_today 
+    cycle: monthly
+    unique_id: rainfall_month
+  rain_year:
+    source: sensor.rainfall_today 
+    cycle: yearly
+    unique_id: rainfall_year
+
+#binary_sensor:
+#  - platform: trend
+#    sensors:
+#      rainfall_trend:
+#        entity_id: sensor.rainfall_today
+#        max_samples: 2

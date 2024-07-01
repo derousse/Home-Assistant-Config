@@ -1,0 +1,50 @@
+sensor:
+  - platform: history_stats
+    name: Rainsensor flips 
+    entity_id: binary_sensor.rainsensor_opening #The aqara sensor
+    state: 'off'
+    type: count
+    start: '{{ now().replace(hour=0, minute=0, second=0) }}'
+    end: '{{ now() }}'
+  - platform: statistics
+    name: 60 Minute Rainfall
+    unique_id: rainstats_60min
+    entity_id: sensor.rainfall_today
+    state_characteristic: sum_differences_nonnegative
+    max_age: 
+      hours: 1
+  - platform: statistics
+    name: 12 Hour Rainfall
+    unique_id: rainstats_6hour
+    entity_id: sensor.rainfall_today
+    state_characteristic: sum_differences_nonnegative
+    max_age: 
+      hours: 12
+  - platform: statistics
+    name: 24 Hour Rainfall
+    unique_id: rainstats_24hour
+    entity_id: sensor.rainfall_today
+    state_characteristic: sum_differences_nonnegative
+    max_age: 
+      hours: 24
+  - platform: statistics
+    name: 7 Day Rainfall
+    unique_id: rainstats_7day
+    entity_id: sensor.rainfall_today
+    state_characteristic: sum_differences_nonnegative
+    max_age: 
+      days: 7
+  - platform: statistics
+    name: 30 Day Rainfall
+    unique_id: rainstats_30day
+    entity_id: sensor.rainfall_today
+    state_characteristic: sum_differences_nonnegative
+    max_age: 
+      days: 30
+  - platform: statistics
+    name: 365 Day Rainfall
+    unique_id: rainstats_365day
+    entity_id: sensor.rainfall_today
+    state_characteristic: sum_differences_nonnegative
+    max_age: 
+      days: 365

@@ -1,0 +1,95 @@
+wake_up_mik:
+  alias: Wake up Mike
+  sequence:
+  - service: media_player.volume_set
+    metadata: {}
+    data:
+      volume_level: 0.35
+    target:
+      entity_id: media_player.bathroom_speaker
+  - service: google_assistant_sdk.send_text_command
+    data:
+      command: Play podcast
+      media_player: media_player.bathroom_speaker
+    enabled: false
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.bathroom_speaker
+    data:
+      media_content_type: episode
+      media_content_id: '{{ states.sensor.podcast_albert_mohler_briefing.state }}'
+  - service: media_player.media_stop
+    target:
+      entity_id: media_player.bathroom_speaker
+    data: {}
+    enabled: false
+  - type: turn_on
+    device_id: 1249099eca75734d22db1c3382366029
+    entity_id: 98d34efb00d2316fb1f573142402fe48
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+    enabled: true
+  - type: turn_off
+    device_id: 1249099eca75734d22db1c3382366029
+    entity_id: 98d34efb00d2316fb1f573142402fe48
+    domain: switch
+  mode: single
+going_to_bed:
+  alias: Going to bed
+  sequence:
+  - type: turn_off
+    device_id: 41e1a2654c488b6bd1dd4e508f66dfa1
+    entity_id: 94faca77c06b28fecda23af7564683a7
+    domain: light
+  - type: turn_off
+    device_id: 708f9d1ddce5193522c00e2f01faa207
+    entity_id: d8cac60486f783c9d4a2bd67f789a061
+    domain: light
+  - type: turn_off
+    device_id: ca3df69b734d4a8e330e649d5846fc2a
+    entity_id: a99c03a0e78258b1262000f74dfae7e7
+    domain: light
+  - type: turn_off
+    device_id: f9231ac8b0410c56554de336f5086d7c
+    entity_id: b47b7d17f3180d209979e14cd6cb0106
+    domain: switch
+  - type: turn_off
+    device_id: cb3b60a4eaba9dd2b8e5733b9f924197
+    entity_id: 7bee8580ef9dea2eb92b1677ffef28d8
+    domain: light
+    enabled: false
+  - type: turn_on
+    device_id: 150a74da55af06b00ef1406b2f13e56b
+    entity_id: 9b974f7273f25e8839fda7d701000eac
+    domain: switch
+  - type: turn_off
+    device_id: 9534e5728b3b7d07ad8e0ce4ff976ef8
+    entity_id: 5d6b8ecb8453b48ddcd7c5048e20903a
+    domain: switch
+  - device_id: 153bbcefb75b835afc106c3190a9ad60
+    domain: select
+    entity_id: 5c750dda7c6a9bad722cab4746beaeba
+    type: select_option
+    option: power_off
+  - service: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      device_id: 1249099eca75734d22db1c3382366029
+    enabled: false
+  - service: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      device_id: 1249099eca75734d22db1c3382366029
+    enabled: false
+  - type: turn_off
+    device_id: 1249099eca75734d22db1c3382366029
+    entity_id: d5bc06386296deb765dadaaca3559b94
+    domain: light
+  mode: single
+  icon: mdi:bed
