@@ -1834,6 +1834,37 @@
         domain: light
       input_entity2: light.lamp1_light
       p20_relay_led_report: '1'
-      schedule_start: '22:00:00'
-      schedule_stop: 06:00:00
+      schedule_start: 00:00:00
+      schedule_stop: 00:00:00
       night_led_brightness: '2'
+      off_color0: '1'
+      off_color1: '1'
+      off_color2: '1'
+- id: '1720189682915'
+  alias: Show doorbell visitor on google hub
+  description: ''
+  trigger:
+  - type: turned_on
+    platform: device
+    device_id: 1f1c7fff2820757e037d63af95626c57
+    entity_id: b107251d8dcce16a72d0082621e2f5c2
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: camera.play_stream
+    metadata: {}
+    data:
+      format: hls
+      media_player: media_player.living_room_hub
+    target:
+      device_id: 1f1c7fff2820757e037d63af95626c57
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - service: media_player.media_stop
+    target:
+      entity_id: media_player.living_room_hub
+    data: {}
+  mode: single
