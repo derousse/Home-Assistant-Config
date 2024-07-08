@@ -731,16 +731,16 @@
     device_id: f74c162ab05297da35f890646c69505c
     entity_id: d00057719718d105198df6fc5d1d88c5
     domain: light
-    brightness_pct: 25
+    brightness_pct: 1
   - type: turn_on
     device_id: 5829208fee27eb6a433843619cdb513b
     entity_id: 85981c6a805db298e542a2db49519285
     domain: light
-    brightness_pct: 25
+    brightness_pct: 1
   - service: light.turn_on
     metadata: {}
     data:
-      brightness_pct: 25
+      brightness_pct: 1
     target:
       device_id: 8f357dc008c756a0c7befc6f753ee9ca
   mode: single
