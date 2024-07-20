@@ -1840,6 +1840,13 @@
       off_color0: '1'
       off_color1: '1'
       off_color2: '1'
+      input_entity4: light.lower_foyer_light_light
+      off_color4: '1'
+      scene_4:
+      - type: toggle
+        device_id: 3ccbddadf4239c769b72f74c1841e73e
+        entity_id: a04aec9334a82ec86ce5e6b09d6caf8f
+        domain: light
 - id: '1720189682915'
   alias: Show doorbell visitor on google hub
   description: ''
