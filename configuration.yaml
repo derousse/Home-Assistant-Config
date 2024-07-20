@@ -160,3 +160,5 @@ utility_meter:
 #      rainfall_trend:
 #        entity_id: sensor.rainfall_today
 #        max_samples: 2
+
+battery_notes:
