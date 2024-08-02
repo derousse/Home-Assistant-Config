@@ -652,6 +652,11 @@
         },
         {
             "manufacturer": "Aqara",
+            "model": "AS008",
+            "battery_type": "CR2032"
+        },
+        {
+            "manufacturer": "Aqara",
             "model": "Cube (MFKZQ01LM)",
             "battery_type": "CR2450"
         },
@@ -1732,7 +1737,22 @@
         },
         {
             "manufacturer": "Eufy Security",
+            "model": "T8113-V",
+            "battery_type": "Rechargeable"
+        },
+        {
+            "manufacturer": "Eufy Security",
+            "model": "T8160",
+            "battery_type": "Rechargeable"
+        },
+        {
+            "manufacturer": "Eufy Security",
             "model": "T8210",
+            "battery_type": "Rechargeable"
+        },
+        {
+            "manufacturer": "Eufy Security",
+            "model": "T8210C",
             "battery_type": "Rechargeable"
         },
         {
@@ -2612,6 +2632,18 @@
         },
         {
             "manufacturer": "Kwikset",
+            "model": "914C",
+            "battery_type": "AA",
+            "battery_quantity": 4
+        },
+        {
+            "manufacturer": "Kwikset",
+            "model": "916",
+            "battery_type": "AA",
+            "battery_quantity": 4
+        },
+        {
+            "manufacturer": "Kwikset",
             "model": "HALO-01",
             "battery_type": "AA",
             "battery_quantity": 4
@@ -2955,6 +2987,18 @@
         },
         {
             "manufacturer": "Moes",
+            "model": "Thermostat radiator valve (TV01-ZB)",
+            "battery_type": "AA",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "Moes",
+            "model": "Thermostat radiator valve (ZTRV-ZX-TV01-MS)",
+            "battery_type": "AA",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "Moes",
             "model": "Thermostatic radiator valve (BRT-100-TRV)",
             "battery_type": "AA",
             "battery_quantity": 2
@@ -3190,6 +3234,12 @@
         {
             "manufacturer": "OpenEpaperLink",
             "model": "M2 2.9\"",
+            "battery_type": "CR2450",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "OpenEpaperLink",
+            "model": "M3 2.9\"",
             "battery_type": "CR2450",
             "battery_quantity": 2
         },
@@ -3780,6 +3830,11 @@
         },
         {
             "manufacturer": "Shelly",
+            "model": "gen1 (SHHT-1)",
+            "battery_type": "CR123A"
+        },
+        {
+            "manufacturer": "Shelly",
             "model": "Shelly Button1",
             "battery_type": "Rechargable"
         },
@@ -4036,6 +4091,21 @@
             "battery_type": "CR2032"
         },
         {
+            "manufacturer": "SmartLabs, Inc",
+            "model": "2844-222 (0x10, 0x16)",
+            "battery_type": "9-volt"
+        },
+        {
+            "manufacturer": "SmartLabs, Inc",
+            "model": "2845-222 (0x10, 0x11)",
+            "battery_type": "AAA"
+        },
+        {
+            "manufacturer": "SmartLabs_Inc",
+            "model": "2842_222_0x10_0x01",
+            "battery_type": "PP3"
+        },
+        {
             "manufacturer": "smartlife",
             "model": "T & H Sensor (lf36y5nwb8jkxwgg)",
             "battery_type": "AAA",
@@ -4221,6 +4291,11 @@
         },
         {
             "manufacturer": "Sonoff",
+            "model": "SNZB-05P",
+            "battery_type": "CR2477"
+        },
+        {
+            "manufacturer": "Sonoff",
             "model": "Temperature and humidity sensor (SNZB-02)",
             "battery_type": "CR2450"
         },
@@ -4265,6 +4340,28 @@
             "manufacturer": "Sonos",
             "model": "Roam",
             "battery_type": "Rechargeable"
+        },
+        {
+            "manufacturer": "Springs Window Fashions",
+            "model": "BRZ1",
+            "battery_type": "CR2430"
+        },
+        {
+            "manufacturer": "Springs Window Fashions",
+            "model": "CSZ1",
+            "battery_type": "AA",
+            "battery_quantity": 8
+        },
+        {
+            "manufacturer": "Springs Window Fashions",
+            "model": "MCZ1",
+            "battery_type": "AAA",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "Springs Window Fashions",
+            "model": "VCZ1",
+            "battery_type": "CR2439"
         },
         {
             "manufacturer": "Sure Petcare",
@@ -4745,6 +4842,12 @@
             "manufacturer": "TuYa",
             "model": "Security remote control (TS0215A_remote)",
             "battery_type": "CR2032"
+        },
+        {
+            "manufacturer": "Tuya",
+            "model": "SGS01 (gvygg3m8)",
+            "battery_type": "AAA",
+            "battery_quantity": 2
         },
         {
             "manufacturer": "TuYa",
@@ -5711,6 +5814,12 @@
             "battery_quantity": 4
         },
         {
+            "manufacturer": "Yale",
+            "model": "YRL256",
+            "battery_type": "AA",
+            "battery_quantity": 4
+        },
+        {
             "manufacturer": "Yeelight",
             "model": "ble YLAI003",
             "battery_type": "CR2032"
@@ -5786,6 +5895,11 @@
         },
         {
             "manufacturer": "Zooz",
+            "model": "ZEN37 800LR",
+            "battery_type": "Rechargeable"
+        },
+        {
+            "manufacturer": "Zooz",
             "model": "ZSE18",
             "battery_type": "CR123A"
         },
@@ -5814,7 +5928,7 @@
         {
             "manufacturer": "Zooz",
             "model": "ZSE42",
-            "battery_type": "CR2032"
+            "battery_type": "MANUAL"
         },
         {
             "manufacturer": "Zooz",
