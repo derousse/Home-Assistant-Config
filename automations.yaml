@@ -778,6 +778,11 @@
     metadata: {}
     data:
       message: Shawn arrived
+  - service: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id: 41e1a2654c488b6bd1dd4e508f66dfa1
   - type: turn_on
     device_id: 150a74da55af06b00ef1406b2f13e56b
     entity_id: 9b974f7273f25e8839fda7d701000eac
@@ -1837,7 +1842,7 @@
       schedule_start: 00:00:00
       schedule_stop: 00:00:00
       night_led_brightness: '2'
-      off_color0: '1'
+      off_color0: '2'
       off_color1: '1'
       off_color2: '1'
       input_entity4: light.lower_foyer_light_light
@@ -1847,6 +1852,9 @@
         device_id: 3ccbddadf4239c769b72f74c1841e73e
         entity_id: a04aec9334a82ec86ce5e6b09d6caf8f
         domain: light
+      on_color0: '2'
+      p23_setting_led_flash: '1'
+      p24_relay_scene_control: '0'
 - id: '1720189682915'
   alias: Show doorbell visitor on google hub
   description: ''
