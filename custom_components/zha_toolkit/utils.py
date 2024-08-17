@@ -9,8 +9,22 @@ import re
 import typing
 from enum import Enum
 
+import aiofiles
 import zigpy
-from homeassistant.components.zha.core.gateway import ZHAGateway
+from homeassistant.core import HomeAssistant
+
+try:
+    from homeassistant.components.zha import Gateway as ZHAGateway
+except ImportError:
+    from homeassistant.components.zha.core.gateway import ZHAGateway
+
+from homeassistant.components import zha
+
+try:
+    from homeassistant.components.zha import helpers as zha_helpers
+except ImportError:
+    zha_helpers = None
+
 from homeassistant.util import dt as dt_util
 from pkg_resources import get_distribution, parse_version
 from zigpy import types as t
@@ -34,10 +48,37 @@ else:
     # pylint: disable=ungrouped-imports
     from homeassistant.helpers.json import save_json
 
+if parse_version(HA_VERSION) >= parse_version("2024.6"):
+    from homeassistant.helpers import device_registry as dr
+    from homeassistant.helpers import entity_registry as er
+
 if typing.TYPE_CHECKING:
     VERSION_TIME: float = 0.0
     VERSION: str = "Unknown"
     MANIFEST: dict[str, str | list[str]] = {}
+
+
+def get_zha_gateway(hass: HomeAssistant) -> ZHAGateway:
+    """Get the ZHA gateway object."""
+    if parse_version(HA_VERSION) >= parse_version("2024.8"):
+        return zha_helpers.get_zha_gateway(hass)
+    if isinstance(zha, dict):
+        return zha.get("zha_gateway", None)
+    return zha.gateway
+
+
+def get_zha_gateway_hass(
+    hass: HomeAssistant,
+) -> ZHAGateway | zha_helpers.ZHAGatewayProxy:
+    """
+    Get the ZHA gateway proxy object.
+
+    Fallback to the gateway object prior to 2024.8 which still has an attached
+    HASS object.
+    """
+    if parse_version(HA_VERSION) >= parse_version("2024.8"):
+        return zha_helpers.get_zha_gateway_proxy(hass)
+    return get_zha_gateway(hass)
 
 
 def getHaVersion() -> str:
@@ -50,7 +91,7 @@ def getZigpyVersion() -> str:
     return ZIGPY_VERSION
 
 
-def getVersion() -> str:
+async def getVersion() -> str:
     # pylint: disable=global-variable-undefined,used-before-assignment
     # pylint: disable=global-statement
     global VERSION_TIME
@@ -81,9 +122,9 @@ def getVersion() -> str:
         # No version, or file change -> get version again
         LOGGER.debug(f"Read version from {fname} {ftime}<>{VERSION_TIME}")
 
-        with open(fname, encoding="utf_8") as infile:
-            VERSION_TIME = ftime
-            MANIFEST = json.load(infile)
+        async with aiofiles.open(fname, mode="r", encoding="utf_8") as infile:
+            json_raw = await infile.read()
+            MANIFEST = json.loads(json_raw)
 
         if MANIFEST is not None:
             if "version" in MANIFEST.keys():
@@ -286,6 +327,8 @@ async def get_ieee(app, listener, ref):
             else get_hass(listener).helpers.entity_registry.async_get(
                 get_hass(listener)
             )
+            if not is_ha_ge("2024.6")
+            else er.async_get(get_hass(listener))
         )
 
         device_registry = (
@@ -297,6 +340,8 @@ async def get_ieee(app, listener, ref):
             else get_hass(listener).helpers.device_registry.async_get(
                 get_hass(listener)
             )
+            if not is_ha_ge("2024.6")
+            else dr.async_get(get_hass(listener))
         )
         registry_device = device_registry.async_get(ref)
 

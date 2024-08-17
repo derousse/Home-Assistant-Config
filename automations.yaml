@@ -1883,3 +1883,85 @@
       entity_id: media_player.living_room_hub
     data: {}
   mode: single
+- id: '1722602001924'
+  alias: Climate Control
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /15
+  condition: []
+  action:
+  - if:
+    - condition: device
+      device_id: c2c253e01bd91fde858511f21159e17d
+      domain: climate
+      entity_id: 7b1b3b85d3dc411c14eef4ec838a4e39
+      type: is_hvac_mode
+      hvac_mode: cool
+    then:
+    - if:
+      - condition: numeric_state
+        entity_id: zone.home
+        above: 0
+      then:
+      - if:
+        - condition: time
+          after: 07:00:00
+          before: '22:00:00'
+        then:
+        - service: climate.set_temperature
+          target:
+            device_id: c2c253e01bd91fde858511f21159e17d
+          data:
+            temperature: '{{ states(''input_number.temp_cool_home_day'') }}'
+        else:
+        - service: climate.set_temperature
+          target:
+            device_id: c2c253e01bd91fde858511f21159e17d
+          data:
+            temperature: '{{ states(''input_number.temp_cool_home_night'') }}'
+      else:
+      - service: climate.set_temperature
+        target:
+          device_id: c2c253e01bd91fde858511f21159e17d
+        data:
+          temperature: '{{ states(''input_number.temp_cool_away'') }}'
+    else:
+    - if:
+      - condition: device
+        device_id: c2c253e01bd91fde858511f21159e17d
+        domain: climate
+        entity_id: 7b1b3b85d3dc411c14eef4ec838a4e39
+        type: is_hvac_mode
+        hvac_mode: heat
+      then:
+      - if:
+        - condition: numeric_state
+          entity_id: zone.home
+          above: 0
+        then:
+        - if:
+          - condition: time
+            after: 07:00:00
+            before: '22:00:00'
+          then:
+          - service: climate.set_temperature
+            target:
+              device_id: c2c253e01bd91fde858511f21159e17d
+            data:
+              temperature: '{{ states(''input_number.temp_heat_home_day_home_day'')
+                }}'
+          else:
+          - service: climate.set_temperature
+            target:
+              device_id: c2c253e01bd91fde858511f21159e17d
+            data:
+              temperature: '{{ states(''input_number.temp_heat_home_night_home_night'')
+                }}'
+        else:
+        - service: climate.set_temperature
+          target:
+            device_id: c2c253e01bd91fde858511f21159e17d
+          data:
+            temperature: '{{ states(''input_number.temp_heat_away'') }}'
+  mode: single

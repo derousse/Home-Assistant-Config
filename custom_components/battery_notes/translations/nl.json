@@ -7,8 +7,8 @@
                     "association_type": "Association type"
                 },
                 "menu_options": {
-                    "device": "Device (recommended)",
-                    "entity": "Entity"
+                    "device": "Apparaat (aanbevolen)",
+                    "entity": "Entiteit"
                 },
                 "title": "Choose your association type"
             },
@@ -23,7 +23,7 @@
             },
             "entity": {
                 "data": {
-                    "source_entity_id": "Entity",
+                    "source_entity_id": "Entiteit",
                     "name": "Naam"
                 },
                 "data_description": {
@@ -41,6 +41,10 @@
                     "battery_low_threshold": "0 zal de globale standaard drempelwaarde gebruiken",
                     "battery_low_template": "Sjabloon om te bepalen dat een batterij bijna leeg is, zal 'waar' teruggeven als bijna leeg\nAlleen nodig voor niet-standaard batterijniveaus"
                 }
+            },
+            "manual": {
+                "description": "This device is marked in the library as manual, variants use different battery types so it cannot be set in the library.\nThe next step will allow you to set your battery type but please do not submit a device request.",
+                "title": "Device manual configuration"
             }
         },
         "abort": {
@@ -48,7 +52,7 @@
         },
         "error": {
             "unknown": "Onbekende fout opgetreden.",
-            "unconfigurable_entity": "It is not possible to add this entity to Battery Notes."
+            "unconfigurable_entity": "Het is niet mogelijk om deze entiteit toe te voegen aan Battery Notes"
         }
     },
     "options": {
@@ -118,7 +122,7 @@
                         "name": "Laatst gerapporteerde batterijniveau"
                     },
                     "source_entity_id": {
-                        "name": "Source Entity Id"
+                        "name": "Bron entiteit Id"
                     },
                     "device_id": {
                         "name": "Apparaat ID"
@@ -154,7 +158,7 @@
                 },
                 "entity_id": {
                     "description": "Entity that has had its battery replaced.",
-                    "name": "Entity"
+                    "name": "Entiteit"
                 },
                 "datetime_replaced": {
                     "description": "Datum vervangen.",
@@ -164,7 +168,7 @@
             "name": "Stel in batterij vervangen"
         },
         "check_battery_last_reported": {
-            "description": "Raise events for devices that haven't reported their battery level.",
+            "description": "Voegt nieuwe gebeurtenis toe voor apparaten die hun batterijniveau niet hebben gerapporteerd.",
             "fields": {
                 "days_last_reported": {
                     "description": "Aantal dagen sinds een apparaat voor het laatst het batterijniveau heeft gerapporteerd.",
@@ -174,7 +178,7 @@
             "name": "Controleer batterij laatst gerapporteerd"
         },
         "check_battery_low": {
-            "description": "Raise events for devices that have a low battery.",
+            "description": "Voegt nieuwe gebeurtenis toe voor apparaten met een lage batterij.",
             "name": "Controleer batterij bijna leeg"
         }
     }
