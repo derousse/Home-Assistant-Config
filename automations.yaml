@@ -127,10 +127,10 @@
       entity_id: 9b974f7273f25e8839fda7d701000eac
       domain: switch
       enabled: true
-  - service: notify.mobile_app_mike_pixel_6a
-    metadata: {}
+  - metadata: {}
     data:
       message: Shawn left
+    action: notify.mobile_app_mike_pixel_6a
   - type: turn_off
     device_id: 41e1a2654c488b6bd1dd4e508f66dfa1
     entity_id: 94faca77c06b28fecda23af7564683a7
@@ -149,6 +149,7 @@
     device_id: 6702c509cc29de049efd71996f5e21b8
     entity_id: 56aa1dde73fde4d10f3ca07ad33b26ae
     domain: switch
+    enabled: false
   - type: turn_off
     device_id: 221f6df8ee065d87660f4e2d98cc8964
     entity_id: deac8380bed9f840d5ee7b92d12e7570

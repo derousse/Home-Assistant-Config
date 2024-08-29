@@ -1818,16 +1818,6 @@
             "battery_quantity": 2
         },
         {
-            "manufacturer": "Eufy",
-            "model": "T8114",
-            "battery_type": "Rechargeable"
-        },
-        {
-            "manufacturer": "Eufy",
-            "model": "T8114-Z",
-            "battery_type": "Rechargeable"
-        },
-        {
             "manufacturer": "Eufy Security",
             "model": "T8113",
             "battery_type": "Rechargeable"
@@ -1835,6 +1825,16 @@
         {
             "manufacturer": "Eufy Security",
             "model": "T8113-V",
+            "battery_type": "Rechargeable"
+        },
+        {
+            "manufacturer": "Eufy Security",
+            "model": "T8114",
+            "battery_type": "Rechargeable"
+        },
+        {
+            "manufacturer": "Eufy Security",
+            "model": "T8114-Z",
             "battery_type": "Rechargeable"
         },
         {
@@ -2232,6 +2232,12 @@
             "model": "H5104",
             "battery_type": "AAA",
             "battery_quantity": 2
+        },
+        {
+            "manufacturer": "Govee",
+            "model": "H5177",
+            "battery_type": "AAA",
+            "battery_quantity": 3
         },
         {
             "manufacturer": "Govee",
@@ -5848,12 +5854,6 @@
         },
         {
             "manufacturer": "Xiaomi",
-            "model": "Mi Temperature And Humidity Monitor 2",
-            "model_id": "LYWSD03MMC-z",
-            "battery_type": "CR2032"
-        },
-        {
-            "manufacturer": "Xiaomi",
             "model": "Mi temperature and humidity sensor (WSDCGQ01LM)",
             "battery_type": "CR2032"
         },
@@ -5985,6 +5985,12 @@
             "manufacturer": "Xiaomi",
             "model": "zigbee WXKG01LM (lumi.sensor_switch)",
             "battery_type": "CR2032"
+        },
+        {
+            "manufacturer": "Xiaomi",
+            "model": "Temp & RH Monitor Lite (pvxx/ZigbeeTLc)",
+            "battery_type": "CR2032",
+            "model_match_method": "startswith"
         },
         {
             "manufacturer": "Xiaomi Aqara",
