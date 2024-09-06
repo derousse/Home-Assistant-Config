@@ -1119,6 +1119,12 @@
             "battery_type": "Irreplaceable"
         },
         {
+            "manufacturer": "Bosch",
+            "model": "Twinguard (8750001213)",
+            "battery_type": "AA",
+            "battery_quantity": 6
+        },
+        {
             "manufacturer": "BRK Brands, Inc.",
             "model": "ZCOMBO",
             "battery_type": "AA",
@@ -3419,6 +3425,12 @@
         },
         {
             "manufacturer": "OpenEpaperLink",
+            "model": "M2 4.2\"",
+            "battery_type": "CR2450",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "OpenEpaperLink",
             "model": "M3 2.9\"",
             "battery_type": "CR2450",
             "battery_quantity": 2
@@ -3983,8 +3995,19 @@
         },
         {
             "manufacturer": "Schneider Electric",
+            "model": "LK FUGA wiser wireless battery 4 button switch (550D6001)",
+            "battery_type": "CR2032"
+        },
+        {
+            "manufacturer": "Schneider Electric",
             "model": "Wiser radiator thermostat (WV704R0A0902)",
             "battery_type": "AA",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "Secure Meters (UK) Ltd.",
+            "model": "HRT4-ZW / SRT321",
+            "battery_type": "AAA",
             "battery_quantity": 2
         },
         {

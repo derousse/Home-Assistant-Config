@@ -1582,24 +1582,29 @@
     device_id: 7e581030acb9740732e6b544903f8371
     entity_id: 6fb6229021a2d0473b39a71e8d42bba1
     domain: binary_sensor
+  - type: moist
+    platform: device
+    device_id: ae0cd29df657bfaa3cd124a996dfb8fc
+    entity_id: b060a59ec8bc89af320395c314200d86
+    domain: binary_sensor
   condition: []
   action:
-  - service: notify.google_assistant_sdk
-    metadata: {}
+  - metadata: {}
     data:
       message: A water leak has been detected in the garage - please investigate immediately!
     enabled: true
-  - service: notify.mobile_app_mike_pixel_6a
-    metadata: {}
+    action: notify.google_assistant_sdk
+  - metadata: {}
     data:
       message: Water detected in garage!
-  - service: notify.mobile_app_mike_pixel_6a
-    data:
+    action: notify.mobile_app_mike_pixel_6a
+  - data:
       message: command_activity
       data:
         intent_package_name: com.google.android.deskclock
         intent_action: android.intent.action.SET_TIMER
         intent_extras: android.intent.extra.alarm.SKIP_UI:true,android.intent.extra.alarm.LENGTH:1
+    action: notify.mobile_app_mike_pixel_6a
   mode: single
 - id: '1718652682349'
   alias: Remind - Water leak in garage
@@ -1608,19 +1613,25 @@
   - platform: time_pattern
     minutes: /5
   condition:
-  - type: is_moist
-    condition: device
-    device_id: 7e581030acb9740732e6b544903f8371
-    entity_id: 6fb6229021a2d0473b39a71e8d42bba1
-    domain: binary_sensor
+  - condition: or
+    conditions:
+    - type: is_moist
+      condition: device
+      device_id: 7e581030acb9740732e6b544903f8371
+      entity_id: 6fb6229021a2d0473b39a71e8d42bba1
+      domain: binary_sensor
+    - type: is_moist
+      condition: device
+      device_id: ae0cd29df657bfaa3cd124a996dfb8fc
+      entity_id: b060a59ec8bc89af320395c314200d86
+      domain: binary_sensor
   action:
-  - service: notify.google_assistant_sdk
-    metadata: {}
+  - metadata: {}
     data:
       message: Don't Forget. A water leak has been detected in the garage!
     enabled: true
-  - service: notify.google_assistant_sdk
-    metadata: {}
+    action: notify.google_assistant_sdk
+  - metadata: {}
     data:
       message: '''{{ ["Don''t Forget. The washing machine has finished the load",
         "Yo! Is someone going to take care of the laundry?", "Have you forgotten that
@@ -1629,8 +1640,8 @@
 
         '
     enabled: false
-  - service: notify.google_assistant_sdk
-    metadata: {}
+    action: notify.google_assistant_sdk
+  - metadata: {}
     data:
       message: '''{{ ["I would like to kindly remind the most beautiful lady of the
         house that her laundry is patiently waiting for her tender, youthful hands
@@ -1639,6 +1650,7 @@
 
         '
     enabled: false
+    action: notify.google_assistant_sdk
   mode: single
 - id: '1718929636464'
   alias: Test - Toggle Lamp 2
