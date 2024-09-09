@@ -1284,6 +1284,12 @@
         },
         {
             "manufacturer": "Develco",
+            "model": "AQSZB-110",
+            "battery_type": "AA",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "Develco",
             "model": "Fire detector with siren (HESZB-120)",
             "battery_type": "CR123A"
         },
@@ -1528,6 +1534,18 @@
         },
         {
             "manufacturer": "eQ-3",
+            "model": "HM-PB-2-WM55",
+            "battery_type": "AAA",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "eQ-3",
+            "model": "HM-PB-6-WM55",
+            "battery_type": "AAA",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "eQ-3",
             "model": "HM-RC-Key4-3",
             "battery_type": "AAA"
         },
@@ -1545,6 +1563,12 @@
         },
         {
             "manufacturer": "eQ-3",
+            "model": "HM-Sec-SC-2",
+            "battery_type": "LR44",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "eQ-3",
             "model": "HM-Sec-SCo",
             "battery_type": "AAA"
         },
@@ -1555,6 +1579,12 @@
         },
         {
             "manufacturer": "eQ-3",
+            "model": "HM-Sen-MDIR-WM55",
+            "battery_type": "AAA",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "eQ-3",
             "model": "HM-TC-IT-WM-W-EU",
             "battery_type": "AAA",
             "battery_quantity": 2
@@ -1562,6 +1592,12 @@
         {
             "manufacturer": "eQ-3",
             "model": "HM-WDS10-TH-O",
+            "battery_type": "AA",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "eQ-3",
+            "model": "HM-WDS30-OT2-SM",
             "battery_type": "AA",
             "battery_quantity": 2
         },
@@ -2540,6 +2576,12 @@
             "manufacturer": "Ikea",
             "model": "SYMFONISK Sound remote, gen 2",
             "model_id": "E2123",
+            "battery_type": "AAA",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "IKEA",
+            "model": "SYMFONISK sound remote, gen 2 (E2123)",
             "battery_type": "AAA",
             "battery_quantity": 2
         },
@@ -3602,6 +3644,11 @@
         },
         {
             "manufacturer": "Philips",
+            "model": "Hue wall switch module (RDM004)",
+            "battery_type": "CR2450"
+        },
+        {
+            "manufacturer": "Philips",
             "model": "ROM001",
             "battery_type": "CR2032"
         },
@@ -4222,6 +4269,11 @@
         },
         {
             "manufacturer": "Signify Netherlands B.V.",
+            "model": "Hue wall switch module (RDM004)",
+            "battery_type": "CR2450"
+        },
+        {
+            "manufacturer": "Signify Netherlands B.V.",
             "model": "RDM001",
             "battery_type": "CR2450"
         },
@@ -4762,6 +4814,12 @@
         },
         {
             "manufacturer": "Third Reality",
+            "model": "Smart button (3RSB22BZ)",
+            "battery_type": "AAA",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "Third Reality",
             "model": "Smart switch Gen3 (3RSS009Z)",
             "battery_type": "AAA",
             "battery_quantity": 2
@@ -5145,6 +5203,11 @@
         },
         {
             "manufacturer": "Tuya",
+            "model": "Smoke Alarm",
+            "battery_type": "PP3"
+        },
+        {
+            "manufacturer": "Tuya",
             "model": "Smoke Alarm (gymi8xdlnxtpslit)",
             "battery_type": "CR123A"
         },
@@ -5238,10 +5301,22 @@
             "battery_type": "CR2032"
         },
         {
+            "manufacturer": "Tuya",
+            "model": "TH05",
+            "battery_type": "CR2032"
+        },
+        {
             "manufacturer": "TuYa",
             "model": "TH08",
             "battery_type": "AAA",
             "battery_quantity": 3
+        },
+        {
+            "manufacturer": "Tuya",
+            "model": "Thermostat radiator valve",
+            "model_id": "TV02-Zigbee",
+            "battery_type": "AA",
+            "battery_quantity": 2
         },
         {
             "manufacturer": "TuYa",
@@ -5392,6 +5467,12 @@
             "manufacturer": "TuYa",
             "model": "Zigbee fingerbot plus (TS0001_fingerbot)",
             "battery_type": "CR2"
+        },
+        {
+            "manufacturer": "Tuya",
+            "model": "Zigbee infrared remote (unsupported)",
+            "battery_type": "AAA",
+            "battery_quantity": 2
         },
         {
             "manufacturer": "TuYa",

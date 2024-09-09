@@ -455,16 +455,16 @@
         entity_id: binary_sensor.daytime
         state: 'on'
       sequence:
-      - service: scene.turn_on
-        metadata: {}
+      - metadata: {}
         target:
           entity_id: scene.daytime
-      - service: climate.set_temperature
-        metadata: {}
+        action: scene.turn_on
+      - metadata: {}
         data:
           temperature: 75
         target:
           device_id: c2c253e01bd91fde858511f21159e17d
+        action: climate.set_temperature
     - conditions:
       - condition: time
         before: '23:00:00'
@@ -474,16 +474,16 @@
         entity_id: binary_sensor.evening
         state: 'on'
       sequence:
-      - service: scene.turn_on
-        metadata: {}
+      - metadata: {}
         target:
           entity_id: scene.new_scene
-      - service: climate.set_temperature
-        metadata: {}
+        action: scene.turn_on
+      - metadata: {}
         data:
           temperature: 75
         target:
           device_id: c2c253e01bd91fde858511f21159e17d
+        action: climate.set_temperature
     - conditions:
       - condition: time
         after: '23:00:00'
@@ -492,24 +492,24 @@
         entity_id: binary_sensor.late_evening_1
         state: 'on'
       sequence:
-      - service: scene.turn_on
-        metadata: {}
+      - metadata: {}
         target:
           entity_id: scene.late_evening
-      - service: light.turn_on
-        metadata: {}
+        action: scene.turn_on
+      - metadata: {}
         data: {}
         target:
           entity_id: light.lamp1_light
+        action: light.turn_on
     - conditions:
       - condition: time
         before: 01:55:00
         enabled: false
       sequence:
-      - service: scene.turn_on
-        metadata: {}
+      - metadata: {}
         target:
           entity_id: scene.late_evening
+        action: scene.turn_on
     - conditions:
       - condition: time
         after: 01:55:00
@@ -522,10 +522,16 @@
         entity_id: binary_sensor.night
         state: 'on'
       sequence:
-      - service: scene.turn_on
-        metadata: {}
+      - metadata: {}
         target:
           entity_id: scene.late_evening
+        action: scene.turn_on
+  - action: automation.trigger
+    metadata: {}
+    data:
+      skip_condition: true
+    target:
+      entity_id: automation.climate_control
   mode: single
 - id: '1705336892653'
   alias: Everyone left
