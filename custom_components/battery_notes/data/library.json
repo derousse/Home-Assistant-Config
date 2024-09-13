@@ -376,6 +376,11 @@
             "battery_type": "CR2032"
         },
         {
+            "manufacturer": "_TZE200_rccxox8p",
+            "model": "TS0601",
+            "battery_type": "PP3"
+        },
+        {
             "manufacturer": "_TZE200_yjjdcqsq",
             "model": "TS0601",
             "battery_type": "AAA",
@@ -1949,6 +1954,12 @@
         },
         {
             "manufacturer": "Everspring",
+            "model": "SE812",
+            "battery_type": "LR14",
+            "battery_quantity": 4
+        },
+        {
+            "manufacturer": "Everspring",
             "model": "ST812",
             "battery_type": "AA",
             "battery_quantity": 3
@@ -2944,6 +2955,11 @@
             "manufacturer": "LifeControl",
             "model": "MCLH-05",
             "battery_type": "AA"
+        },
+        {
+            "manufacturer": "LifeControl",
+            "model": "MCLH-07",
+            "battery_type": "CR123A"
         },
         {
             "manufacturer": "LifeControl",
@@ -4042,6 +4058,11 @@
         },
         {
             "manufacturer": "Schneider Electric",
+            "model": "FLS/SYSTEM-M/4",
+            "battery_type": "CR2032"
+        },
+        {
+            "manufacturer": "Schneider Electric",
             "model": "LK FUGA wiser wireless battery 4 button switch (550D6001)",
             "battery_type": "CR2032"
         },
@@ -5126,6 +5147,13 @@
             "manufacturer": "Tuya",
             "model": "PIR (b5g40alm)",
             "battery_type": "CR2450"
+        },
+        {
+            "manufacturer": "Tuya",
+            "model": "PIR 24Ghz human presence sensor",
+            "model_id": "ZG-204ZM",
+            "battery_type": "AAA",
+            "battery_quantity": 2
         },
         {
             "manufacturer": "TuYa",
