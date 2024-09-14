@@ -1236,6 +1236,11 @@
         },
         {
             "manufacturer": "Custom devices (DiY)",
+            "model": "Plant watering sensor zFlora_S (zFlora_S)",
+            "battery_type": "CR2450"
+        },
+        {
+            "manufacturer": "Custom devices (DiY)",
             "model": "Xiaomi temperature & humidity sensor with custom firmware (LYWSD03MMC)",
             "battery_type": "CR2032"
         },
@@ -3378,6 +3383,11 @@
             "battery_type": "CR123A"
         },
         {
+            "manufacturer": "Nortek Security & Control LLC",
+            "model": "WAPIRZ-1",
+            "battery_type": "CR123a"
+        },
+        {
             "manufacturer": "Nortek Security and Control",
             "model": "F-ADT-WTR-1",
             "battery_type": "CR123A"
@@ -4916,6 +4926,13 @@
             "battery_type": "CR2032"
         },
         {
+            "manufacturer": "TP-Link",
+            "model": "T315",
+            "hw_version": "1.0",
+            "battery_type": "AAA",
+            "battery_quantity": 2
+        },
+        {
             "manufacturer": "Trust",
             "model": "COSensor-EM",
             "battery_type": "CR123A"
@@ -5343,6 +5360,12 @@
             "manufacturer": "Tuya",
             "model": "Thermostat radiator valve",
             "model_id": "TV02-Zigbee",
+            "battery_type": "AA",
+            "battery_quantity": 2
+        },
+        {
+            "manufacturer": "Tuya",
+            "model": "Thermostat radiator valve (TV02-Zigbee)",
             "battery_type": "AA",
             "battery_quantity": 2
         },
