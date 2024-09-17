@@ -721,6 +721,12 @@
         },
         {
             "manufacturer": "Aqara",
+            "model": "aqara.lock.bzacn4 ZNMS16LM",
+            "battery_type": "AA",
+            "battery_quantity": 6
+        },
+        {
+            "manufacturer": "Aqara",
             "model": "AS006",
             "battery_type": "CR1632"
         },
@@ -743,6 +749,11 @@
             "manufacturer": "Aqara",
             "model": "Door and window sensor E1 (MCCGQ14LM)",
             "battery_type": "CR1632"
+        },
+        {
+            "manufacturer": "Aqara",
+            "model": "Door and window sensor T1 (MCCGQ12LM)",
+            "battery_type": "CR2032"
         },
         {
             "manufacturer": "Aqara",
@@ -3205,6 +3216,12 @@
             "battery_quantity": 2
         },
         {
+            "manufacturer": "modkam.ru",
+            "model": "ptvo_counter_2ch",
+            "battery_type": "AAA",
+            "battery_quantity": 2
+        },
+        {
             "manufacturer": "Moes",
             "model": "Door/window magnetic sensor (ZSS-X-GWM-C)",
             "battery_type": "CR2032"
@@ -3587,6 +3604,13 @@
             "manufacturer": "OSRAM",
             "model": "Switch 4x EU-LIGHTIFY",
             "battery_type": "CR2450"
+        },
+        {
+            "manufacturer": "OWON",
+            "model": "Temperature sensor",
+            "model_id": "THS317-ET",
+            "battery_type": "AAA",
+            "battery_quantity": 2
         },
         {
             "manufacturer": "OWON",
@@ -5529,6 +5553,12 @@
             "manufacturer": "TuYa",
             "model": "Zigbee water leak sensor (TS0207_water_leak_detector_2)",
             "battery_type": "CR2032"
+        },
+        {
+            "manufacturer": "Tuya",
+            "model": "ZP01",
+            "battery_type": "AAA",
+            "battery_quantity": 2
         },
         {
             "manufacturer": "Tuya",

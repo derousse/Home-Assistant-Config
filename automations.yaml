@@ -1984,3 +1984,53 @@
           data:
             temperature: '{{ states(''input_number.temp_heat_away'') }}'
   mode: single
+- id: '1726341098939'
+  alias: Notify - Water leak in kitchen
+  description: ''
+  trigger:
+  - type: moist
+    platform: device
+    device_id: e91ab489cf7c8a95e343958177526ef8
+    entity_id: 77c9b22e9719acac0186939e49b955c8
+    domain: binary_sensor
+  condition: []
+  action:
+  - metadata: {}
+    data:
+      message: A water leak has been detected in the kitchen - please investigate
+        immediately!
+    enabled: true
+    action: notify.google_assistant_sdk
+  - metadata: {}
+    data:
+      message: Water detected in kitchen!
+    action: notify.mobile_app_mike_pixel_6a
+  - data:
+      message: command_activity
+      data:
+        intent_package_name: com.google.android.deskclock
+        intent_action: android.intent.action.SET_TIMER
+        intent_extras: android.intent.extra.alarm.SKIP_UI:true,android.intent.extra.alarm.LENGTH:1
+    action: notify.mobile_app_mike_pixel_6a
+  mode: single
+- id: '1726341247705'
+  alias: Remind - Water leak in kitchen
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /5
+  condition:
+  - condition: or
+    conditions:
+    - type: is_moist
+      condition: device
+      device_id: e91ab489cf7c8a95e343958177526ef8
+      entity_id: 77c9b22e9719acac0186939e49b955c8
+      domain: binary_sensor
+  action:
+  - metadata: {}
+    data:
+      message: Don't Forget. A water leak has been detected in the kitchen!
+    enabled: true
+    action: notify.google_assistant_sdk
+  mode: single
