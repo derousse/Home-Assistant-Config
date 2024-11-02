@@ -93,3 +93,54 @@ going_to_bed:
     domain: light
   mode: single
   icon: mdi:bed
+set_google_home_volumes_for_announcement:
+  alias: Set Google Home Volumes To 100 Percent
+  sequence:
+  - metadata: {}
+    data:
+      volume_level: 1
+    target:
+      entity_id:
+      - media_player.bathroom_speaker
+      - media_player.living_room_hub
+    action: media_player.volume_set
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+    enabled: false
+  mode: single
+  description: ''
+  icon: mdi:speaker-wireless
+set_google_home_volumes_to_50_percent:
+  alias: Set Google Home Volumes To 50 Percent
+  sequence:
+  - metadata: {}
+    data:
+      volume_level: 0.5
+    target:
+      entity_id:
+      - media_player.bathroom_speaker
+      - media_player.living_room_hub
+    action: media_player.volume_set
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+    enabled: false
+  mode: single
+  description: ''
+  icon: mdi:speaker-wireless
+stop_bathroom_speaker:
+  alias: 'Stop bathroom speaker '
+  sequence:
+  - target:
+      entity_id: media_player.bathroom_speaker
+    data: {}
+    enabled: true
+    action: media_player.media_stop
+  mode: single
+  description: ''
+  icon: mdi:speaker-wireless

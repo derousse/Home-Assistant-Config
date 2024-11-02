@@ -543,25 +543,25 @@
     below: 1
   condition: []
   action:
-  - service: scene.turn_on
-    metadata: {}
+  - metadata: {}
     target:
       entity_id: scene.daytime_duplicate
-  - service: climate.set_temperature
-    metadata: {}
+    action: scene.turn_on
+  - metadata: {}
     data:
       hvac_mode: heat
       temperature: 67
     target:
       device_id: c2c253e01bd91fde858511f21159e17d
     enabled: false
-  - service: climate.set_temperature
-    metadata: {}
+    action: climate.set_temperature
+  - metadata: {}
     data:
-      hvac_mode: cool
-      temperature: 77
+      hvac_mode: heat
+      temperature: 65
     target:
       device_id: c2c253e01bd91fde858511f21159e17d
+    action: climate.set_temperature
   mode: single
 - id: '1705802315644'
   alias: Lower Foyer Light On
@@ -1504,10 +1504,10 @@
 - id: '1713385064459'
   alias: Remind - Laundry Done
   description: ''
-  trigger:
-  - platform: time_pattern
-    minutes: /15
-  condition:
+  triggers:
+  - minutes: /15
+    trigger: time_pattern
+  conditions:
   - condition: and
     conditions:
     - condition: state
@@ -1516,14 +1516,16 @@
     - condition: time
       after: 08:00:00
       before: '22:00:00'
-  action:
-  - service: notify.google_assistant_sdk
+  actions:
+  - action: script.set_google_home_volumes_for_announcement
     metadata: {}
+    data: {}
+  - metadata: {}
     data:
       message: Don't Forget. The washing machine has finished the load
     enabled: true
-  - service: notify.google_assistant_sdk
-    metadata: {}
+    action: notify.google_assistant_sdk
+  - metadata: {}
     data:
       message: '''{{ ["Don''t Forget. The washing machine has finished the load",
         "Yo! Is someone going to take care of the laundry?", "Have you forgotten that
@@ -1532,8 +1534,8 @@
 
         '
     enabled: false
-  - service: notify.google_assistant_sdk
-    metadata: {}
+    action: notify.google_assistant_sdk
+  - metadata: {}
     data:
       message: '''{{ ["I would like to kindly remind the most beautiful lady of the
         house that her laundry is patiently waiting for her tender, youthful hands
@@ -1542,6 +1544,10 @@
 
         '
     enabled: false
+    action: notify.google_assistant_sdk
+  - action: script.set_google_home_volumes_to_50_percent
+    metadata: {}
+    data: {}
   mode: single
 - id: '1714586113784'
   alias: Check Weather Test
@@ -1905,11 +1911,11 @@
 - id: '1722602001924'
   alias: Climate Control
   description: ''
-  trigger:
-  - platform: time_pattern
-    minutes: /15
-  condition: []
-  action:
+  triggers:
+  - minutes: /15
+    trigger: time_pattern
+  conditions: []
+  actions:
   - if:
     - condition: device
       device_id: c2c253e01bd91fde858511f21159e17d
@@ -1928,23 +1934,23 @@
           after: 07:00:00
           before: '22:00:00'
         then:
-        - service: climate.set_temperature
-          target:
+        - target:
             device_id: c2c253e01bd91fde858511f21159e17d
           data:
             temperature: '{{ states(''input_number.temp_cool_home_day'') }}'
+          action: climate.set_temperature
         else:
-        - service: climate.set_temperature
-          target:
+        - target:
             device_id: c2c253e01bd91fde858511f21159e17d
           data:
             temperature: '{{ states(''input_number.temp_cool_home_night'') }}'
+          action: climate.set_temperature
       else:
-      - service: climate.set_temperature
-        target:
+      - target:
           device_id: c2c253e01bd91fde858511f21159e17d
         data:
           temperature: '{{ states(''input_number.temp_cool_away'') }}'
+        action: climate.set_temperature
     else:
     - if:
       - condition: device
@@ -1961,28 +1967,26 @@
         then:
         - if:
           - condition: time
-            after: 07:00:00
+            after: 05:45:00
             before: '22:00:00'
           then:
-          - service: climate.set_temperature
-            target:
+          - target:
               device_id: c2c253e01bd91fde858511f21159e17d
             data:
-              temperature: '{{ states(''input_number.temp_heat_home_day_home_day'')
-                }}'
+              temperature: '{{ states(''input_number.temp_heat_home_day'') }}'
+            action: climate.set_temperature
           else:
-          - service: climate.set_temperature
-            target:
+          - target:
               device_id: c2c253e01bd91fde858511f21159e17d
             data:
-              temperature: '{{ states(''input_number.temp_heat_home_night_home_night'')
-                }}'
+              temperature: '{{ states(''input_number.temp_heat_home_night'') }}'
+            action: climate.set_temperature
         else:
-        - service: climate.set_temperature
-          target:
+        - target:
             device_id: c2c253e01bd91fde858511f21159e17d
           data:
             temperature: '{{ states(''input_number.temp_heat_away'') }}'
+          action: climate.set_temperature
   mode: single
 - id: '1726341098939'
   alias: Notify - Water leak in kitchen
@@ -2033,4 +2037,97 @@
       message: Don't Forget. A water leak has been detected in the kitchen!
     enabled: true
     action: notify.google_assistant_sdk
+  mode: single
+- id: '1727547917694'
+  alias: Master Bath Light Control
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_sensor_bathroom_motion
+    from: 'off'
+    to: 'on'
+  action:
+  - alias: Turn on the light
+    target:
+      device_id: ac119e43b5766b05f5541b84972f400d
+    action: light.turn_on
+    data: {}
+  - alias: Wait until there is no motion from device
+    wait_for_trigger:
+      platform: state
+      entity_id: binary_sensor.motion_sensor_bathroom_motion
+      from: 'on'
+      to: 'off'
+  - alias: Wait the number of seconds that has been set
+    delay: 30
+  - if:
+    - condition: device
+      device_id: 676d91012991c5a9958a750c22cbd725
+      domain: media_player
+      entity_id: 47fedf57248aec63f3752be2a174e53f
+      type: is_off
+    then:
+    - action: light.turn_off
+      metadata: {}
+      data: {}
+      target:
+        device_id: ac119e43b5766b05f5541b84972f400d
+  - alias: Turn off the light
+    target:
+      device_id: ac119e43b5766b05f5541b84972f400d
+    action: light.turn_off
+    data: {}
+    enabled: false
+  mode: restart
+  max_exceeded: silent
+- id: '1727549470219'
+  alias: Master Bath Manual Turn On
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - event.master_bath_switch_scene_001
+  condition: []
+  action:
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      device_id: ac119e43b5766b05f5541b84972f400d
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id: ac119e43b5766b05f5541b84972f400d
+  - action: automation.turn_off
+    metadata: {}
+    data:
+      stop_actions: true
+    target:
+      entity_id: automation.master_bath_light_control
+  - action: automation.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: automation.master_bath_light_control
+  mode: single
+- id: '1727580391031'
+  alias: Master bath off when music stops
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 676d91012991c5a9958a750c22cbd725
+    domain: media_player
+    entity_id: 47fedf57248aec63f3752be2a174e53f
+    type: turned_off
+  condition:
+  - condition: state
+    entity_id: switch.master_bath_switch
+    state: 'on'
+  action:
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      device_id: ac119e43b5766b05f5541b84972f400d
   mode: single
