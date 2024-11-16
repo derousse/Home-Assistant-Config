@@ -1807,17 +1807,11 @@
     input:
       zooz_switch: 4909a60d4e2e90cce5a6e73bea6f5ed4
       scene_5h:
-      - type: toggle
-        device_id: 153bbcefb75b835afc106c3190a9ad60
-        entity_id: c8abb58b756fab0b72d13bab2cbf2f66
-        domain: switch
-        enabled: false
-      - device_id: 153bbcefb75b835afc106c3190a9ad60
-        domain: select
-        entity_id: 5c750dda7c6a9bad722cab4746beaeba
-        type: select_option
-        option: Watch Chromecast
-        enabled: false
+      - action: script.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: script.turn_off_lr_tv
       - if:
         - condition: device
           device_id: 153bbcefb75b835afc106c3190a9ad60
@@ -1837,6 +1831,18 @@
           entity_id: 5c750dda7c6a9bad722cab4746beaeba
           type: select_option
           option: power_off
+        enabled: false
+      - type: toggle
+        device_id: 153bbcefb75b835afc106c3190a9ad60
+        entity_id: c8abb58b756fab0b72d13bab2cbf2f66
+        domain: switch
+        enabled: false
+      - device_id: 153bbcefb75b835afc106c3190a9ad60
+        domain: select
+        entity_id: 5c750dda7c6a9bad722cab4746beaeba
+        type: select_option
+        option: Watch Chromecast
+        enabled: false
       - if:
         - condition: device
           device_id: 153bbcefb75b835afc106c3190a9ad60
@@ -2130,4 +2136,73 @@
     data: {}
     target:
       device_id: ac119e43b5766b05f5541b84972f400d
+  mode: single
+- id: '1731175064806'
+  alias: Update TV Status - On
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - remote.google_tv
+    from: 'off'
+    to: 'on'
+  conditions: []
+  actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - if:
+    - condition: state
+      entity_id: media_player.google_tv
+      attribute: app_id
+      state: com.google.android.youtube.tvunplugged
+    then:
+    - action: input_boolean.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id: input_boolean.lr_tv_youtube_tv_status
+  - if:
+    - condition: state
+      entity_id: media_player.google_tv
+      attribute: app_id
+      state: com.google.android.youtube.tv
+    then:
+    - action: input_boolean.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - input_boolean.lr_tv_youtube_status
+  - if:
+    - condition: state
+      entity_id: media_player.google_tv
+      attribute: app_id
+      state: com.netflix.ninja
+    then:
+    - action: input_boolean.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - input_boolean.lr_tv_netflix_status
+  mode: single
+- id: '1731175157397'
+  alias: Update TV Status - Off
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - remote.google_tv
+    from: 'on'
+    to: 'off'
+  conditions: []
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id:
+      - input_boolean.lr_tv_youtube_tv_status
+    data: {}
   mode: single

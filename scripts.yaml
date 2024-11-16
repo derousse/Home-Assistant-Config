@@ -41,6 +41,11 @@ wake_up_mik:
 going_to_bed:
   alias: Going to bed
   sequence:
+  - action: script.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: script.living_room_tv_turn_off
   - type: turn_off
     device_id: 41e1a2654c488b6bd1dd4e508f66dfa1
     entity_id: 94faca77c06b28fecda23af7564683a7
@@ -75,18 +80,19 @@ going_to_bed:
     entity_id: 5c750dda7c6a9bad722cab4746beaeba
     type: select_option
     option: power_off
-  - service: switch.turn_off
-    metadata: {}
+    enabled: false
+  - metadata: {}
     data: {}
     target:
       device_id: 1249099eca75734d22db1c3382366029
     enabled: false
-  - service: light.turn_off
-    metadata: {}
+    action: switch.turn_off
+  - metadata: {}
     data: {}
     target:
       device_id: 1249099eca75734d22db1c3382366029
     enabled: false
+    action: light.turn_off
   - type: turn_off
     device_id: 1249099eca75734d22db1c3382366029
     entity_id: d5bc06386296deb765dadaaca3559b94
@@ -144,3 +150,315 @@ stop_bathroom_speaker:
   mode: single
   description: ''
   icon: mdi:speaker-wireless
+turn_off_lr_tv:
+  alias: Living Room TV - Toggle YouTube TV
+  sequence:
+  - if:
+    - condition: state
+      entity_id: input_boolean.lr_tv_youtube_tv_status
+      state: 'off'
+    then:
+    - type: turn_on
+      device_id: 61fff8417f2021f7dcdb5155938d7f03
+      entity_id: 7346de096befe94538d6f8632bf61009
+      domain: remote
+      enabled: false
+    - action: media_player.play_media
+      data:
+        media_content_type: app
+        media_content_id: com.google.android.youtube.tvunplugged
+      target:
+        entity_id:
+        - media_player.google_tv_2
+    - action: input_boolean.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id: input_boolean.lr_tv_youtube_tv_status
+    - action: input_boolean.turn_off
+      target:
+        entity_id:
+        - input_boolean.lr_tv_youtube_status
+        - input_boolean.lr_tv_netflix_status
+      data: {}
+    - action: remote.send_command
+      target:
+        entity_id: remote.google_tv
+      data:
+        hold_secs: 1
+        command: MEDIA_PLAY
+        delay_secs: 5
+        num_repeats: 5
+    else:
+    - type: turn_off
+      device_id: 61f9b84ab51d0a85227852aad33d0a19
+      entity_id: fc1cbc5fd628f337ddd9a5d9957e23fa
+      domain: remote
+    - action: input_boolean.turn_off
+      target:
+        entity_id:
+        - input_boolean.lr_tv_youtube_tv_status
+        - input_boolean.lr_tv_netflix_status
+        - input_boolean.lr_tv_youtube_status
+      data: {}
+  - if:
+    - condition: device
+      type: is_off
+      device_id: 61f9b84ab51d0a85227852aad33d0a19
+      entity_id: fc1cbc5fd628f337ddd9a5d9957e23fa
+      domain: remote
+    then:
+    - type: turn_on
+      device_id: 61fff8417f2021f7dcdb5155938d7f03
+      entity_id: 7346de096befe94538d6f8632bf61009
+      domain: remote
+      enabled: false
+    - action: media_player.play_media
+      data:
+        media_content_type: app
+        media_content_id: com.google.android.youtube.tvunplugged
+      target:
+        entity_id:
+        - media_player.google_tv_2
+    - action: input_boolean.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id: input_boolean.lr_tv_youtube_tv_status
+    - action: input_boolean.turn_off
+      target:
+        entity_id:
+        - input_boolean.lr_tv_youtube_status
+        - input_boolean.lr_tv_netflix_status
+      data: {}
+    else:
+    - type: turn_off
+      device_id: 61f9b84ab51d0a85227852aad33d0a19
+      entity_id: fc1cbc5fd628f337ddd9a5d9957e23fa
+      domain: remote
+    - action: input_boolean.turn_off
+      target:
+        entity_id:
+        - input_boolean.lr_tv_youtube_tv_status
+        - input_boolean.lr_tv_netflix_status
+        - input_boolean.lr_tv_youtube_status
+      data: {}
+    enabled: false
+  description: ''
+  icon: mdi:television
+living_room_tv_turn_on:
+  alias: Living Room TV - Turn On YoutubeTV
+  sequence:
+  - type: turn_on
+    device_id: 61fff8417f2021f7dcdb5155938d7f03
+    entity_id: 7346de096befe94538d6f8632bf61009
+    domain: remote
+    enabled: false
+  - action: media_player.play_media
+    data:
+      media_content_type: app
+      media_content_id: com.google.android.youtube.tvunplugged
+    target:
+      entity_id:
+      - media_player.google_tv_2
+  - action: remote.send_command
+    target:
+      entity_id: remote.google_tv
+    data:
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 1
+      command: MEDIA_PLAY
+  - action: input_boolean.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.lr_tv_youtube_tv_status
+  - action: input_boolean.turn_off
+    target:
+      entity_id:
+      - input_boolean.lr_tv_youtube_status
+      - input_boolean.lr_tv_netflix_status
+    data: {}
+  description: ''
+  icon: mdi:youtube-tv
+living_room_tv_turn_off:
+  alias: Living Room TV - Turn Off
+  sequence:
+  - if:
+    - condition: state
+      entity_id: remote.livingroom_tcl_roku_tv
+      state: 'on'
+    then:
+    - type: turn_off
+      device_id: 61f9b84ab51d0a85227852aad33d0a19
+      entity_id: fc1cbc5fd628f337ddd9a5d9957e23fa
+      domain: remote
+    - action: input_boolean.turn_off
+      target:
+        entity_id:
+        - input_boolean.lr_tv_youtube_tv_status
+        - input_boolean.lr_tv_netflix_status
+        - input_boolean.lr_tv_youtube_status
+      data: {}
+  description: ''
+  icon: mdi:television
+living_room_tv_turn_on_youtube:
+  alias: Living Room TV - Turn On Youtube
+  sequence:
+  - type: turn_on
+    device_id: 61fff8417f2021f7dcdb5155938d7f03
+    entity_id: 7346de096befe94538d6f8632bf61009
+    domain: remote
+    enabled: false
+  - action: media_player.play_media
+    data:
+      media_content_type: app
+      media_content_id: com.google.android.youtube.tv
+    target:
+      entity_id:
+      - media_player.google_tv_2
+  - action: remote.send_command
+    target:
+      entity_id: remote.google_tv
+    data:
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 1
+      command: MEDIA_PLAY
+    enabled: false
+  - action: input_boolean.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.lr_tv_youtube_status
+  - action: input_boolean.turn_off
+    target:
+      entity_id:
+      - input_boolean.lr_tv_youtube_tv_status
+      - input_boolean.lr_tv_netflix_status
+    data: {}
+  description: ''
+  icon: mdi:youtube
+living_room_tv_turn_on_netflix:
+  alias: Living Room TV - Turn On Netflix
+  sequence:
+  - type: turn_on
+    device_id: 61fff8417f2021f7dcdb5155938d7f03
+    entity_id: 7346de096befe94538d6f8632bf61009
+    domain: remote
+    enabled: false
+  - action: media_player.play_media
+    data:
+      media_content_type: app
+      media_content_id: com.netflix.ninja
+    target:
+      entity_id:
+      - media_player.google_tv_2
+  - action: remote.send_command
+    target:
+      entity_id: remote.google_tv
+    data:
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 1
+      command: MEDIA_PLAY
+    enabled: false
+  - action: input_boolean.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.lr_tv_youtube_status
+      - input_boolean.lr_tv_netflix_status
+  - action: input_boolean.turn_off
+    target:
+      entity_id:
+      - input_boolean.lr_tv_youtube_status
+      - input_boolean.lr_tv_youtube_tv_status
+    data: {}
+  description: ''
+  icon: mdi:netflix
+living_room_tv_toggle_youtube:
+  alias: Living Room TV - Toggle YouTube
+  sequence:
+  - if:
+    - condition: state
+      entity_id: input_boolean.lr_tv_youtube_status
+      state: 'off'
+    then:
+    - action: media_player.play_media
+      data:
+        media_content_type: app
+        media_content_id: com.google.android.youtube.tv
+      target:
+        entity_id:
+        - media_player.google_tv_2
+    - action: input_boolean.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - input_boolean.lr_tv_youtube_status
+    - action: input_boolean.turn_off
+      target:
+        entity_id:
+        - input_boolean.lr_tv_netflix_status
+        - input_boolean.lr_tv_youtube_tv_status
+      data: {}
+    else:
+    - type: turn_off
+      device_id: 61f9b84ab51d0a85227852aad33d0a19
+      entity_id: fc1cbc5fd628f337ddd9a5d9957e23fa
+      domain: remote
+    - action: input_boolean.turn_off
+      target:
+        entity_id:
+        - input_boolean.lr_tv_youtube_tv_status
+        - input_boolean.lr_tv_netflix_status
+        - input_boolean.lr_tv_youtube_status
+      data: {}
+  description: ''
+  icon: mdi:television
+living_room_tv_toggle_netflix:
+  alias: Living Room TV - Toggle Netflix
+  sequence:
+  - if:
+    - condition: state
+      entity_id: input_boolean.lr_tv_netflix_status
+      state: 'off'
+    then:
+    - action: media_player.play_media
+      data:
+        media_content_type: app
+        media_content_id: com.netflix.ninja
+      target:
+        entity_id:
+        - media_player.google_tv_2
+    - action: input_boolean.turn_on
+      metadata: {}
+      data: {}
+      target:
+        entity_id:
+        - input_boolean.lr_tv_netflix_status
+    - action: input_boolean.turn_off
+      target:
+        entity_id:
+        - input_boolean.lr_tv_youtube_tv_status
+        - input_boolean.lr_tv_youtube_status
+      data: {}
+    else:
+    - type: turn_off
+      device_id: 61f9b84ab51d0a85227852aad33d0a19
+      entity_id: fc1cbc5fd628f337ddd9a5d9957e23fa
+      domain: remote
+    - action: input_boolean.turn_off
+      target:
+        entity_id:
+        - input_boolean.lr_tv_youtube_tv_status
+        - input_boolean.lr_tv_netflix_status
+        - input_boolean.lr_tv_youtube_status
+      data: {}
+  description: ''
+  icon: mdi:television
