@@ -1886,6 +1886,16 @@
       on_color0: '2'
       p23_setting_led_flash: '1'
       p24_relay_scene_control: '0'
+      scene_3:
+      - action: automation.trigger
+        metadata: {}
+        data:
+          skip_condition: true
+        target:
+          entity_id:
+          - automation.christmas_lights_indoor_toggle
+      input_entity3: switch.wyze_switch_3
+      off_color3: '1'
 - id: '1720189682915'
   alias: Show doorbell visitor on google hub
   description: ''
@@ -2205,4 +2215,136 @@
       entity_id:
       - input_boolean.lr_tv_youtube_tv_status
     data: {}
+  mode: single
+- id: '1732917929329'
+  alias: Christmas Lights - Outdoor - On
+  description: ''
+  triggers:
+  - trigger: sun
+    event: sunset
+    offset: 0
+  conditions: []
+  actions:
+  - type: turn_on
+    device_id: 0d110b282747429fb28a100d9e7c4e55
+    entity_id: 02cc730277f8fd9a349e7141b29e1ec3
+    domain: switch
+  - type: turn_on
+    device_id: 94398372ac9623d7174fc1e58a4dc091
+    entity_id: b1f10110ccd616d231be270e501a01bb
+    domain: switch
+  mode: single
+- id: '1732918011027'
+  alias: Christmas Lights - Outdoor - Off
+  description: ''
+  triggers:
+  - trigger: time
+    at: 00:00:00
+  conditions: []
+  actions:
+  - type: turn_off
+    device_id: 0d110b282747429fb28a100d9e7c4e55
+    entity_id: 02cc730277f8fd9a349e7141b29e1ec3
+    domain: switch
+  - type: turn_off
+    device_id: 94398372ac9623d7174fc1e58a4dc091
+    entity_id: b1f10110ccd616d231be270e501a01bb
+    domain: switch
+  mode: single
+- id: '1732992848242'
+  alias: Christmas Lights - Indoor - On
+  description: ''
+  triggers:
+  - trigger: time
+    at: '16:00:00'
+  conditions: []
+  actions:
+  - type: turn_on
+    device_id: 6702c509cc29de049efd71996f5e21b8
+    entity_id: 56aa1dde73fde4d10f3ca07ad33b26ae
+    domain: switch
+  - type: turn_on
+    device_id: 221f6df8ee065d87660f4e2d98cc8964
+    entity_id: deac8380bed9f840d5ee7b92d12e7570
+    domain: switch
+  - type: turn_on
+    device_id: 1249099eca75734d22db1c3382366029
+    entity_id: 98d34efb00d2316fb1f573142402fe48
+    domain: switch
+  - type: turn_on
+    device_id: f9231ac8b0410c56554de336f5086d7c
+    entity_id: b47b7d17f3180d209979e14cd6cb0106
+    domain: switch
+  mode: single
+- id: '1732992892594'
+  alias: Christmas Lights - Indoor - Off
+  description: ''
+  triggers:
+  - trigger: time
+    at: '22:00:00'
+  conditions: []
+  actions:
+  - type: turn_off
+    device_id: 6702c509cc29de049efd71996f5e21b8
+    entity_id: 56aa1dde73fde4d10f3ca07ad33b26ae
+    domain: switch
+  - type: turn_off
+    device_id: 221f6df8ee065d87660f4e2d98cc8964
+    entity_id: deac8380bed9f840d5ee7b92d12e7570
+    domain: switch
+  - type: turn_off
+    device_id: 1249099eca75734d22db1c3382366029
+    entity_id: d5bc06386296deb765dadaaca3559b94
+    domain: light
+  - type: turn_off
+    device_id: f9231ac8b0410c56554de336f5086d7c
+    entity_id: b47b7d17f3180d209979e14cd6cb0106
+    domain: switch
+  mode: single
+- id: '1733141319194'
+  alias: Christmas Lights - Indoor - Toggle
+  description: ''
+  triggers: []
+  conditions: []
+  actions:
+  - if:
+    - condition: device
+      type: is_off
+      device_id: f9231ac8b0410c56554de336f5086d7c
+      entity_id: b47b7d17f3180d209979e14cd6cb0106
+      domain: switch
+    then:
+    - type: turn_on
+      device_id: 6702c509cc29de049efd71996f5e21b8
+      entity_id: 56aa1dde73fde4d10f3ca07ad33b26ae
+      domain: switch
+    - type: turn_on
+      device_id: 221f6df8ee065d87660f4e2d98cc8964
+      entity_id: deac8380bed9f840d5ee7b92d12e7570
+      domain: switch
+    - type: turn_on
+      device_id: 1249099eca75734d22db1c3382366029
+      entity_id: 98d34efb00d2316fb1f573142402fe48
+      domain: switch
+    - type: turn_on
+      device_id: f9231ac8b0410c56554de336f5086d7c
+      entity_id: b47b7d17f3180d209979e14cd6cb0106
+      domain: switch
+    else:
+    - type: turn_off
+      device_id: 6702c509cc29de049efd71996f5e21b8
+      entity_id: 56aa1dde73fde4d10f3ca07ad33b26ae
+      domain: switch
+    - type: turn_off
+      device_id: 221f6df8ee065d87660f4e2d98cc8964
+      entity_id: deac8380bed9f840d5ee7b92d12e7570
+      domain: switch
+    - type: turn_off
+      device_id: 1249099eca75734d22db1c3382366029
+      entity_id: 98d34efb00d2316fb1f573142402fe48
+      domain: switch
+    - type: turn_off
+      device_id: f9231ac8b0410c56554de336f5086d7c
+      entity_id: b47b7d17f3180d209979e14cd6cb0106
+      domain: switch
   mode: single
