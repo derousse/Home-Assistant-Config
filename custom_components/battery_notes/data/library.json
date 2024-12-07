@@ -7189,6 +7189,11 @@
         },
         {
             "manufacturer": "Zooz",
+            "model": "ZSE41 Open Close Sensor",
+            "battery_type": "Zooz ZSE41"
+        },
+        {
+            "manufacturer": "Zooz",
             "model": "ZSE42",
             "battery_type": "MANUAL"
         },

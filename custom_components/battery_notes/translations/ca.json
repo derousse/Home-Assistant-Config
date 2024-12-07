@@ -75,6 +75,7 @@
             }
         },
         "error": {
+            "orphaned_battery_note": "El dispositiu o l'entitat associada ja no existeix per a aquesta Battery Note.",
             "unknown": "S'ha produït un error desconegut"
         }
     },
@@ -154,7 +155,7 @@
             "description": "Estableix l'últim cop que es va substituir la bateria.",
             "fields": {
                 "device_id": {
-                    "description": "Dispositiu que ha canviat la bateria.",
+                    "description": "Dispositiu al qual li han canviat la bateria.",
                     "name": "Dispositiu"
                 },
                 "entity_id": {
@@ -181,6 +182,19 @@
         "check_battery_low": {
             "description": "Llença les notificacions per als dispositius que tenen una bateria baixa.",
             "name": "Comproveu l'última informació de la bateria"
+        }
+    },
+    "issues": {
+        "missing_device": {
+            "title": "Battery Note orfe",
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "title": "Battery Note orfe",
+                        "description": "El dispositiu o l'entitat associada ja no existeix per a l'entrada de Battery Note {nom}, la Battery Note s'hauria de suprimir.\nSeleccioneu **Envia** per suprimir aquesta Battery Note."
+                    }
+                }
+            }
         }
     }
 }

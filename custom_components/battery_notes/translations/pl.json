@@ -75,6 +75,7 @@
             }
         },
         "error": {
+            "orphaned_battery_note": "Powiązane urządzenie lub encja już nie istnieje dla tej Notatki Baterii.",
             "unknown": "Wystąpił nieznany błąd."
         }
     },
@@ -181,6 +182,19 @@
         "check_battery_low": {
             "description": "Zwiększ liczbę zdarzeń dla urządzeń, które mają niski poziom baterii.",
             "name": "Sprawdzaj niski poziom baterii"
+        }
+    },
+    "issues": {
+        "missing_device": {
+            "title": "Osierocona Notatka Baterii",
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "title": "Osierocona Notatka Baterii",
+                        "description": "Powiązane urządzenie lub encja już nie istnieje dla wpisu Notatki Baterii {name}, Notatka Baterii powinna zostać usunięta.\nWybierz **Zatwierdź** aby usunąć tę notatkę o baterii"
+                    }
+                }
+            }
         }
     }
 }
