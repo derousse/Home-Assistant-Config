@@ -75,12 +75,6 @@ going_to_bed:
     device_id: 9534e5728b3b7d07ad8e0ce4ff976ef8
     entity_id: 5d6b8ecb8453b48ddcd7c5048e20903a
     domain: switch
-  - device_id: 153bbcefb75b835afc106c3190a9ad60
-    domain: select
-    entity_id: 5c750dda7c6a9bad722cab4746beaeba
-    type: select_option
-    option: power_off
-    enabled: false
   - metadata: {}
     data: {}
     target:

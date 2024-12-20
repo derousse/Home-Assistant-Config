@@ -724,12 +724,12 @@
 - id: '1706062630467'
   alias: Landscaping Lights - On
   description: ''
-  trigger:
-  - platform: sun
-    event: sunset
+  triggers:
+  - event: sunset
     offset: 00:30:00
-  condition: []
-  action:
+    trigger: sun
+  conditions: []
+  actions:
   - type: turn_on
     device_id: 9d12c80ee92878bba239c5fc5699926d
     entity_id: 342ae966cd82e31e39ad29bbbc2a3101
@@ -739,17 +739,18 @@
     entity_id: d00057719718d105198df6fc5d1d88c5
     domain: light
     brightness_pct: 1
+    enabled: false
   - type: turn_on
     device_id: 5829208fee27eb6a433843619cdb513b
     entity_id: 85981c6a805db298e542a2db49519285
     domain: light
     brightness_pct: 1
-  - service: light.turn_on
-    metadata: {}
+  - metadata: {}
     data:
       brightness_pct: 1
     target:
       device_id: 8f357dc008c756a0c7befc6f753ee9ca
+    action: light.turn_on
   mode: single
 - id: '1706460125015'
   alias: Start Movietime
@@ -774,38 +775,40 @@
 - id: '1706622456652'
   alias: Shawn Arrived
   description: ''
-  trigger:
-  - platform: zone
-    entity_id: person.shawn_derousse
+  triggers:
+  - entity_id: person.shawn_derousse
     zone: zone.home
     event: enter
-  condition: []
-  action:
-  - service: notify.mobile_app_mike_pixel_6a
-    metadata: {}
+    trigger: zone
+  conditions: []
+  actions:
+  - metadata: {}
     data:
       message: Shawn arrived
-  - service: light.turn_on
-    metadata: {}
+    action: notify.mobile_app_mike_pixel_6a
+  - metadata: {}
     data: {}
     target:
       device_id: 41e1a2654c488b6bd1dd4e508f66dfa1
+    action: light.turn_on
   - type: turn_on
     device_id: 150a74da55af06b00ef1406b2f13e56b
     entity_id: 9b974f7273f25e8839fda7d701000eac
     domain: switch
-  - service: notify.google_assistant_sdk
-    metadata: {}
+  - metadata: {}
     data:
       message: Shawn's Home!
+    action: notify.google_assistant_sdk
   - type: turn_on
     device_id: 6702c509cc29de049efd71996f5e21b8
     entity_id: 56aa1dde73fde4d10f3ca07ad33b26ae
     domain: switch
+    enabled: false
   - type: turn_on
     device_id: 221f6df8ee065d87660f4e2d98cc8964
     entity_id: deac8380bed9f840d5ee7b92d12e7570
     domain: switch
+    enabled: false
   mode: single
 - id: '1706639541431'
   alias: Start Work - Office Lamp On
@@ -1778,27 +1781,6 @@
     entity_id: fff724535aa6251228e7c231b32cdfeb
     domain: switch
   mode: single
-- id: '1718931900943'
-  alias: Test - Toggle TV
-  description: ''
-  trigger:
-  - platform: device
-    device_id: 4909a60d4e2e90cce5a6e73bea6f5ed4
-    domain: zwave_js
-    type: event.value_notification.central_scene
-    property: scene
-    property_key: '005'
-    endpoint: 0
-    command_class: 91
-    subtype: Endpoint 0 Scene 005
-    value: 2
-  condition: []
-  action:
-  - type: toggle
-    device_id: 153bbcefb75b835afc106c3190a9ad60
-    entity_id: c8abb58b756fab0b72d13bab2cbf2f66
-    domain: switch
-  mode: single
 - id: '1719058715611'
   alias: LivingRoom Zen32 Behavior
   description: ''
@@ -1811,52 +1793,8 @@
         metadata: {}
         data: {}
         target:
-          entity_id: script.turn_off_lr_tv
-      - if:
-        - condition: device
-          device_id: 153bbcefb75b835afc106c3190a9ad60
-          domain: select
-          entity_id: 5c750dda7c6a9bad722cab4746beaeba
-          type: selected_option
-          option: power_off
-        then:
-        - device_id: 153bbcefb75b835afc106c3190a9ad60
-          domain: select
-          entity_id: 5c750dda7c6a9bad722cab4746beaeba
-          type: select_option
-          option: Watch Chromecast
-        else:
-        - device_id: 153bbcefb75b835afc106c3190a9ad60
-          domain: select
-          entity_id: 5c750dda7c6a9bad722cab4746beaeba
-          type: select_option
-          option: power_off
-        enabled: false
-      - type: toggle
-        device_id: 153bbcefb75b835afc106c3190a9ad60
-        entity_id: c8abb58b756fab0b72d13bab2cbf2f66
-        domain: switch
-        enabled: false
-      - device_id: 153bbcefb75b835afc106c3190a9ad60
-        domain: select
-        entity_id: 5c750dda7c6a9bad722cab4746beaeba
-        type: select_option
-        option: Watch Chromecast
-        enabled: false
-      - if:
-        - condition: device
-          device_id: 153bbcefb75b835afc106c3190a9ad60
-          domain: select
-          entity_id: 5c750dda7c6a9bad722cab4746beaeba
-          type: selected_option
-          option: power_off
-        then:
-        - device_id: 153bbcefb75b835afc106c3190a9ad60
-          domain: select
-          entity_id: 5c750dda7c6a9bad722cab4746beaeba
-          type: select_option
-          option: Watch Chromecast
-        enabled: false
+          entity_id:
+          - script.toggle_youtube_tv
       scene_1:
       - type: toggle
         device_id: 708f9d1ddce5193522c00e2f01faa207
@@ -2057,12 +1995,12 @@
 - id: '1727547917694'
   alias: Master Bath Light Control
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.motion_sensor_bathroom_motion
+  triggers:
+  - entity_id: binary_sensor.motion_sensor_bathroom_motion
     from: 'off'
     to: 'on'
-  action:
+    trigger: state
+  actions:
   - alias: Turn on the light
     target:
       device_id: ac119e43b5766b05f5541b84972f400d
@@ -2070,18 +2008,25 @@
     data: {}
   - alias: Wait until there is no motion from device
     wait_for_trigger:
-      platform: state
       entity_id: binary_sensor.motion_sensor_bathroom_motion
       from: 'on'
       to: 'off'
+      trigger: state
   - alias: Wait the number of seconds that has been set
     delay: 30
   - if:
-    - condition: device
-      device_id: 676d91012991c5a9958a750c22cbd725
-      domain: media_player
-      entity_id: 47fedf57248aec63f3752be2a174e53f
-      type: is_off
+    - condition: or
+      conditions:
+      - condition: device
+        device_id: 676d91012991c5a9958a750c22cbd725
+        domain: media_player
+        entity_id: 47fedf57248aec63f3752be2a174e53f
+        type: is_off
+      - condition: device
+        device_id: 676d91012991c5a9958a750c22cbd725
+        domain: media_player
+        entity_id: 47fedf57248aec63f3752be2a174e53f
+        type: is_idle
     then:
     - action: light.turn_off
       metadata: {}
@@ -2347,4 +2292,27 @@
       device_id: f9231ac8b0410c56554de336f5086d7c
       entity_id: b47b7d17f3180d209979e14cd6cb0106
       domain: switch
+  mode: single
+- id: '1734182849470'
+  alias: Shawns Up - Turn on Lamp1
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.shawn_pixel_6a_battery_state
+    to: discharging
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  conditions:
+  - condition: time
+    after: 05:00:00
+    before: 08:00:00
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id: 41e1a2654c488b6bd1dd4e508f66dfa1
   mode: single
