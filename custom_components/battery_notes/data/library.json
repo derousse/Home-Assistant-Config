@@ -2519,6 +2519,12 @@
             "battery_quantity": 4
         },
         {
+            "manufacturer": "GiEX",
+            "model": "Water valve (GX02)",
+            "battery_type": "AA",
+            "battery_quantity": 4
+        },
+        {
             "manufacturer": "Google",
             "model": "A12",
             "battery_type": "AA",
@@ -2845,6 +2851,12 @@
         },
         {
             "manufacturer": "Hunter Douglas",
+            "model": "Designer Roller",
+            "battery_type": "AA",
+            "battery_quantity": 12
+        },
+        {
+            "manufacturer": "Hunter Douglas",
             "model": "Duette",
             "battery_type": "AA",
             "battery_quantity": 12
@@ -2853,6 +2865,12 @@
             "manufacturer": "Hunter Douglas",
             "model": "Duette by Hunter Douglas",
             "battery_type": "Rechargeable"
+        },
+        {
+            "manufacturer": "Hunter Douglas",
+            "model": "Silhouette",
+            "battery_type": "AA",
+            "battery_quantity": 12
         },
         {
             "manufacturer": "Hunter Douglas",
@@ -3237,6 +3255,12 @@
         {
             "manufacturer": "Kwikset",
             "model": "910",
+            "battery_type": "AA",
+            "battery_quantity": 4
+        },
+        {
+            "manufacturer": "Kwikset",
+            "model": "910 SmartCode traditional electronic deadbolt (99100-006)",
             "battery_type": "AA",
             "battery_quantity": 4
         },

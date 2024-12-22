@@ -19,9 +19,9 @@ automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
 
-http:
-  ssl_certificate: /ssl/fullchain.pem
-  ssl_key: /ssl/privkey.pem
+#http:
+#  ssl_certificate: /ssl/fullchain.pem
+#  ssl_key: /ssl/privkey.pem
 
 logger:
   default: info
@@ -48,6 +48,16 @@ sensor:
     name: mike_s_desk_energy
     unit_prefix: k
     round: 2
+  - platform: google_wifi
+    host: 192.168.86.1
+    name: "Google WiFi"
+    monitored_conditions:
+      - current_version
+      - new_version
+      - uptime
+      - last_restart
+      - local_ip
+      - status
 
 # Config for Openwrt Luci Integration
 device_tracker:
