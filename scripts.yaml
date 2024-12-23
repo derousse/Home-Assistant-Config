@@ -240,6 +240,7 @@ turn_off_lr_tv:
     enabled: false
   description: ''
   icon: mdi:television
+  mode: restart
 living_room_tv_turn_on:
   alias: Living Room TV - Turn On YoutubeTV
   sequence:
