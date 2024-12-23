@@ -22,6 +22,10 @@ scene: !include scenes.yaml
 #http:
 #  ssl_certificate: /ssl/fullchain.pem
 #  ssl_key: /ssl/privkey.pem
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.30.33.0/24
 
 logger:
   default: info
