@@ -176,3 +176,10 @@ utility_meter:
 #        max_samples: 2
 
 battery_notes:
+
+# Example configuration.yaml entry
+yahoofinance:
+  symbols:
+    - BTC-USD
+  scan_interval:
+    minutes: 5

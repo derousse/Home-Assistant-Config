@@ -91,6 +91,11 @@ going_to_bed:
     device_id: 1249099eca75734d22db1c3382366029
     entity_id: d5bc06386296deb765dadaaca3559b94
     domain: light
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      device_id: 934d3c91731f4e25a1896872f55c8058
   mode: single
   icon: mdi:bed
 set_google_home_volumes_for_announcement:
