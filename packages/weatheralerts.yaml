@@ -61,7 +61,7 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0 %}
-                  {% set alerts_total.count = alerts_total.count + 1 %} 
+                  {% set alerts_total.count = alerts_total.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -72,7 +72,7 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if 'warning' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set warnings.count = warnings.count + 1 %} 
+                  {% set warnings.count = warnings.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -82,7 +82,7 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if 'tornado warning' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set warnings.count = warnings.count + 1 %} 
+                  {% set warnings.count = warnings.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -92,7 +92,7 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if 'freeze warning' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set warnings.count = warnings.count + 1 %} 
+                  {% set warnings.count = warnings.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -102,7 +102,17 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if 'thunderstorm warning' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set warnings.count = warnings.count + 1 %} 
+                  {% set warnings.count = warnings.count + 1 %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+            {{ warnings.count }}
+          wstorm_warning_count: >-
+            {% set warnings = namespace(count=0) %}
+            {% if (state_attr('sensor.randolph', 'alerts')) %}
+              {% for alert in state_attr('sensor.randolph', 'alerts') %}
+                {% if 'winter storm warning' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
+                  {% set warnings.count = warnings.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -112,7 +122,7 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if 'flood warning' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set warnings.count = warnings.count + 1 %} 
+                  {% set warnings.count = warnings.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -122,7 +132,7 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if 'watch' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set watches.count = watches.count + 1 %} 
+                  {% set watches.count = watches.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -132,7 +142,7 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if 'tornado watch' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set watches.count = watches.count + 1 %} 
+                  {% set watches.count = watches.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -142,7 +152,17 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if 'thunderstorm watch' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set watches.count = watches.count + 1 %} 
+                  {% set watches.count = watches.count + 1 %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+            {{ watches.count }}
+          wstorm_watch_count: >-
+            {% set watches = namespace(count=0) %}
+            {% if (state_attr('sensor.randolph', 'alerts')) %}
+              {% for alert in state_attr('sensor.randolph', 'alerts') %}
+                {% if 'winter storm watch' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
+                  {% set watches.count = watches.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -152,7 +172,7 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if 'flood watch' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set watches.count = watches.count + 1 %} 
+                  {% set watches.count = watches.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -162,7 +182,7 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if 'advisory' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set advisories.count = advisories.count + 1 %} 
+                  {% set advisories.count = advisories.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -172,7 +192,7 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if 'statement' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set statements.count = statements.count + 1 %} 
+                  {% set statements.count = statements.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -192,7 +212,7 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if 'alert' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set alerts.count = alerts.count + 1 %} 
+                  {% set alerts.count = alerts.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -202,7 +222,7 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if 'message' in alert.event.lower() and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set messages.count = messages.count + 1 %} 
+                  {% set messages.count = messages.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -212,7 +232,7 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if ('emergency' in alert.event.lower() or 'danger' in alert.event.lower() or 'immediate' in alert.event.lower()) and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set important.count = important.count + 1 %} 
+                  {% set important.count = important.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -222,7 +242,7 @@ sensor:
             {% if (state_attr('sensor.randolph', 'alerts')) %}
               {% for alert in state_attr('sensor.randolph', 'alerts') %}
                 {% if 'Test' in alert.event and (as_timestamp(alert['endsExpires']) - as_timestamp(now()) > 0) %}
-                  {% set test.count = test.count + 1 %} 
+                  {% set test.count = test.count + 1 %}
                 {% endif %}
               {% endfor %}
             {% endif %}
@@ -1290,10 +1310,10 @@ sensor:
             "sensor.randolph_alert_3",
             "sensor.randolph_alert_4",
             "sensor.randolph_alert_5"] %}
-          {% for alert in alerts if is_state(alert, 'on') %} {% if 
-          'advisory' in state_attr( alert, 'display_title')|lower() %} 
-          {{ state_attr( alert, 'spoken_title')}} 
-          {%- endif %} 
+          {% for alert in alerts if is_state(alert, 'on') %} {% if
+          'advisory' in state_attr( alert, 'display_title')|lower() %}
+          {{ state_attr( alert, 'spoken_title')}}
+          {%- endif %}
           {% endfor %}
       weather_statement_details:
         friendly_name: weather_statement_details
@@ -1304,10 +1324,10 @@ sensor:
             "sensor.randolph_alert_3",
             "sensor.randolph_alert_4",
             "sensor.randolph_alert_5"] %}
-          {% for alert in alerts if is_state(alert, 'on') %} {% if 
-          'statement' in state_attr( alert, 'display_title')|lower() %} 
-          {{ state_attr( alert, 'spoken_title')}} 
-          {%- endif %} 
+          {% for alert in alerts if is_state(alert, 'on') %} {% if
+          'statement' in state_attr( alert, 'display_title')|lower() %}
+          {{ state_attr( alert, 'spoken_title')}}
+          {%- endif %}
           {% endfor %}
       weather_test_details:
         friendly_name: weather_test_details
@@ -1318,10 +1338,10 @@ sensor:
             "sensor.randolph_alert_3",
             "sensor.randolph_alert_4",
             "sensor.randolph_alert_5"] %}
-          {% for alert in alerts if is_state(alert, 'on') %} {% if 
-          'test' in state_attr( alert, 'display_title')|lower() %} 
-          {{ state_attr( alert, 'spoken_title')}} 
-          {%- endif %} 
+          {% for alert in alerts if is_state(alert, 'on') %} {% if
+          'test' in state_attr( alert, 'display_title')|lower() %}
+          {{ state_attr( alert, 'spoken_title')}}
+          {%- endif %}
           {% endfor %}
       tornado_watch_details:
         friendly_name: Tornado Watch Details
@@ -1379,6 +1399,34 @@ sensor:
           {{ state_attr( alert, 'spoken_title')}}
           {%- endif %}
           {% endfor %}
+      wstorm_watch_details:
+        friendly_name: Winter Storm Watch Details
+        value_template: >
+          {% set alerts = [
+            "sensor.randolph_alert_1",
+            "sensor.randolph_alert_2",
+            "sensor.randolph_alert_3",
+            "sensor.randolph_alert_4",
+            "sensor.randolph_alert_5"] %}
+          {% for alert in alerts if is_state(alert, 'on') %} {% if
+          ('winter storm' in state_attr( alert, 'display_title')|lower()) and ('watch' in state_attr( alert, 'display_title')|lower()) %}
+          {{ state_attr( alert, 'spoken_title')}}
+          {%- endif %}
+          {% endfor %}
+      wstorm_warning_details:
+        friendly_name: Winter Storm Warning Details
+        value_template: >
+          {% set alerts = [
+            "sensor.randolph_alert_1",
+            "sensor.randolph_alert_2",
+            "sensor.randolph_alert_3",
+            "sensor.randolph_alert_4",
+            "sensor.randolph_alert_5"] %}
+          {% for alert in alerts if is_state(alert, 'on') %} {% if
+          ('winter storm' in state_attr( alert, 'display_title')|lower()) and ('warning' in state_attr( alert, 'display_title')|lower()) %}
+          {{ state_attr( alert, 'spoken_title')}}
+          {%- endif %}
+          {% endfor %}
 ################################################################################
 ## input_text ##
 
@@ -1394,7 +1442,7 @@ input_text:
     icon: mdi:information-variant
     max: 255
     initial: "1"
-    
+
   randolph_triggered_alert_ids:
     name: Triggered Weather Alert IDs - Text
     icon: mdi:information-variant
@@ -1405,7 +1453,7 @@ input_text:
     name: Triggered Weather Alert IDs - Audible
     icon: mdi:information-variant
     max: 255
-    initial: "1" 
+    initial: "1"
 
 ################################################################################
 ## automation ##
@@ -1518,25 +1566,25 @@ automation:
         data_template:
           message: >
             Current NWS Weather Alerts:
-              
+
             {% if states('sensor.randolph_alerts_are_active') == "No" %}
             No alerts at this time for {{ state_attr('sensor.randolph', 'friendly_name') }}.
             {% endif %}
             {% if states.sensor.randolph_alert_1.state == "on" %}
             {{ states.sensor.randolph_alert_1.attributes.display_title }} for {{ state_attr('sensor.randolph', 'friendly_name') }}
-              
+
             {% endif %}
             {% if states.sensor.randolph_alert_2.state == "on" %}
             {{ states.sensor.randolph_alert_2.attributes.display_title }} for {{ state_attr('sensor.randolph', 'friendly_name') }}
-              
+
             {% endif %}
             {% if states.sensor.randolph_alert_3.state == "on" %}
             {{ states.sensor.randolph_alert_3.attributes.display_title }} for {{ state_attr('sensor.randolph', 'friendly_name') }}
-              
+
             {% endif %}
             {% if states.sensor.randolph_alert_4.state == "on" %}
             {{ states.sensor.randolph_alert_4.attributes.display_title }} for {{ state_attr('sensor.randolph', 'friendly_name') }}
-              
+
             {% endif %}
             {% if states.sensor.randolph_alert_5.state == "on" %}
             {{ states.sensor.randolph_alert_5.attributes.display_title }} for {{ state_attr('sensor.randolph', 'friendly_name') }}
@@ -1580,7 +1628,7 @@ automation:
 ##        - service: script.text_notify
 ##          data_template:
 ##            message: >
-##              {{ states('sensor.tornado_watch_details') }} 
+##              {{ states('sensor.tornado_watch_details') }}
 #      - conditions:
 #        - condition: trigger
 #          id: cancel
