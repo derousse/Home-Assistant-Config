@@ -42,8 +42,10 @@ from homeassistant.helpers.entity_registry import (
 )
 from homeassistant.helpers.event import (
     EventStateChangedData,
+    EventStateReportedData,
     async_track_entity_registry_updated_event,
     async_track_state_change_event,
+    async_track_state_report_event,
 )
 from homeassistant.helpers.reload import async_setup_reload_service
 from homeassistant.helpers.typing import StateType
@@ -244,8 +246,6 @@ async def async_setup_entry(
 
     async_add_entities(entities)
 
-    await coordinator.async_config_entry_first_refresh()
-
 
 async def async_setup_platform(
     hass: HomeAssistant,
@@ -387,6 +387,54 @@ class BatteryNotesBatteryPlusSensor(
 
         self.async_write_ha_state()
 
+    @callback
+    async def async_state_reported_listener(
+        self, event: Event[EventStateReportedData] | None = None
+    ) -> None:
+        # pylint: disable=unused-argument
+        """Handle child updates."""
+
+        if not self.coordinator.wrapped_battery:
+            return
+
+        if (
+            (
+                wrapped_battery_state := self.hass.states.get(
+                    self.coordinator.wrapped_battery.entity_id
+                )
+            )
+            is None
+            or wrapped_battery_state.state
+            in [
+                STATE_UNAVAILABLE,
+                STATE_UNKNOWN,
+            ]
+            or not validate_is_float(wrapped_battery_state.state)
+        ):
+            self._attr_native_value = None
+            self._attr_available = False
+            self.async_write_ha_state()
+            return
+
+        self.coordinator.current_battery_level = wrapped_battery_state.state
+
+        await self.coordinator.async_request_refresh()
+
+        self.coordinator.last_reported = datetime.utcnow()
+
+        _LOGGER.debug(
+            "Entity id %s has been reported.",
+            self.coordinator.wrapped_battery.entity_id,
+        )
+
+        await self.coordinator.async_request_refresh()
+
+        self._attr_available = True
+        self._attr_native_value = self.coordinator.rounded_battery_level
+        self._wrapped_attributes = wrapped_battery_state.attributes
+
+        self.async_write_ha_state()
+
     async def _register_entity_id_change_listener(
         self,
         entity_id: str,
@@ -395,36 +443,45 @@ class BatteryNotesBatteryPlusSensor(
         """Listen for battery entity_id changes and update battery_plus."""
 
         @callback
-        async def _entity_rename_listener(event: Event) -> None:
+        async def _entity_rename_listener(event: Event[er.EventEntityRegistryUpdatedData]) -> None:
             """Handle renaming of the entity."""
-            old_entity_id = event.data["old_entity_id"]
-            new_entity_id = event.data[CONF_SOURCE_ENTITY_ID]
+
+            new_entity_id = event.data["entity_id"]
+            old_entity_id = event.data.get("old_entity_id", None)
+
+            if not old_entity_id:
+                return
+
             _LOGGER.debug(
-                "Entity id has been changed, updating battery notes plus entity registry. old_id=%s, new_id=%s",
+                "Entity id has been changed, updating battery notes plus entity. old_id=%s, new_id=%s",
                 old_entity_id,
                 new_entity_id,
             )
 
             entity_registry = er.async_get(self.hass)
-            if entity_registry.async_get(entity_id) is not None:
-                entity_registry.async_update_entity_options(
-                    entity_id,
-                    DOMAIN,
-                    {"entity_id": new_entity_id},
+            if not entity_registry.async_get(entity_id):
+                return
+
+            new_wrapped_battery = entity_registry.async_get(new_entity_id)
+            self.coordinator.wrapped_battery = new_wrapped_battery
+
+            # Create a listener for the newly named battery entity
+            if self.coordinator.wrapped_battery:
+                self.async_on_remove(
+                    async_track_state_change_event(
+                        self.hass,
+                        [self.coordinator.wrapped_battery.entity_id],
+                        self.async_state_changed_listener,
+                    )
                 )
 
-                new_wrapped_battery = entity_registry.async_get(new_entity_id)
-                self.coordinator.wrapped_battery = new_wrapped_battery
-
-                # Create a listener for the newly named battery entity
-                if self.coordinator.wrapped_battery:
-                    self.async_on_remove(
-                        async_track_state_change_event(
-                            self.hass,
-                            [self.coordinator.wrapped_battery.entity_id],
-                            self.async_state_changed_listener,
-                        )
+                self.async_on_remove(
+                    async_track_state_report_event(
+                        self.hass,
+                        [self.coordinator.wrapped_battery.entity_id],
+                        self.async_state_reported_listener,
                     )
+                )
 
         @callback
         def _filter_entity_id(event_data: Mapping[str, Any]) -> bool:
@@ -452,12 +509,27 @@ class BatteryNotesBatteryPlusSensor(
             """Handle child updates."""
             await self.async_state_changed_listener(event)
 
+        @callback
+        async def _async_state_reported_listener(
+            event: Event[EventStateReportedData] | None = None,
+        ) -> None:
+            """Handle child updates."""
+            await self.async_state_reported_listener(event)
+
         if self.coordinator.wrapped_battery:
             self.async_on_remove(
                 async_track_state_change_event(
                     self.hass,
                     [self.coordinator.wrapped_battery.entity_id],
                     _async_state_changed_listener,
+                )
+            )
+
+            self.async_on_remove(
+                async_track_state_report_event(
+                    self.hass,
+                    [self.coordinator.wrapped_battery.entity_id],
+                    _async_state_reported_listener,
                 )
             )
 
@@ -510,7 +582,7 @@ class BatteryNotesBatteryPlusSensor(
             self.coordinator.async_add_listener(self._handle_coordinator_update)
         )
 
-        await self.coordinator.async_config_entry_first_refresh()
+        await self.coordinator.async_refresh()
 
     @callback
     def _handle_coordinator_update(self) -> None:

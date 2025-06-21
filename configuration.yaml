@@ -22,6 +22,7 @@ scene: !include scenes.yaml
 #http:
 #  ssl_certificate: /ssl/fullchain.pem
 #  ssl_key: /ssl/privkey.pem
+
 http:
   use_x_forwarded_for: true
   trusted_proxies:
@@ -29,6 +30,8 @@ http:
 
 logger:
   default: info
+#  logs:
+#    custom_components.zha_toolkit: debug
 #  logs:
 #    homeassistant.core: debug
 #    homeassistant.components.zha: debug
@@ -118,9 +121,11 @@ google_assistant:
       expose: false
 
 zha_toolkit:
+
 python_script:
 
 recorder:
+  purge_keep_days: 365
   exclude:
     entities:
       - automation.last_seen_monitor
@@ -153,6 +158,17 @@ template:
           {% else %}
             {{ 0 }}
           {% endif %}
+# Storage for Bubble Card Modules
+  - trigger:
+      - trigger: event
+        event_type: bubble_card_update_modules
+    sensor:
+      - name: "Bubble Card Modules"
+        state: "saved"
+        icon: "mdi:puzzle"
+        attributes:
+          modules: "{{ trigger.event.data.modules }}"
+          last_updated: "{{ trigger.event.data.last_updated }}"
 
 utility_meter:
   rain_week:
@@ -183,3 +199,8 @@ yahoofinance:
     - BTC-USD
   scan_interval:
     minutes: 5
+
+network_scanner:
+  ip_range: "192.168.86.0/24"
+  mac_mapping_1: "bc:14:14:f1:81:1b;Brother Printer;Cloud Network Technology Singapore Pte. Ltd."
+  mac_mapping_2: "b1:81:11:31:a1:b1;My iPhone;Apple Inc."

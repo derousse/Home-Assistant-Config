@@ -6,7 +6,6 @@ https://github.com/iprak/yahoofinance
 from __future__ import annotations
 
 from datetime import date, datetime, timedelta
-import logging
 
 from homeassistant.components.sensor import (
     DOMAIN as SENSOR_DOMAIN,
@@ -21,7 +20,7 @@ from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType, StateTyp
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import dt as dt_util
 
-from . import SymbolDefinition, convert_to_float
+from . import convert_to_float
 from .const import (
     ATTR_CURRENCY_SYMBOL,
     ATTR_DIVIDEND_DATE,
@@ -56,12 +55,13 @@ from .const import (
     DOMAIN,
     HASS_DATA_CONFIG,
     HASS_DATA_COORDINATORS,
+    LOGGER,
     NUMERIC_DATA_GROUPS,
     PERCENTAGE_DATA_KEYS_NEEDING_MULTIPLICATION,
 )
 from .coordinator import YahooSymbolUpdateCoordinator
+from .dataclasses import SymbolDefinition
 
-_LOGGER = logging.getLogger(__name__)
 ENTITY_ID_FORMAT = SENSOR_DOMAIN + "." + DOMAIN + "_{}"
 
 
@@ -90,7 +90,7 @@ async def async_setup_platform(
 
     # We have already invoked async_refresh on coordinator, so don'tupdate_before_add
     async_add_entities(sensors, update_before_add=False)
-    _LOGGER.info("Entities added for %s", [item.symbol for item in symbol_definitions])
+    LOGGER.info("Entities added for %s", [item.symbol for item in symbol_definitions])
 
 
 class YahooFinanceSensor(CoordinatorEntity, SensorEntity):
@@ -161,7 +161,7 @@ class YahooFinanceSensor(CoordinatorEntity, SensorEntity):
                     self._attr_extra_state_attributes[key] = None
 
         # Delay initial data population to `available` which is called from `_async_write_ha_state`
-        _LOGGER.debug(
+        LOGGER.debug(
             "Created entity for target_currency=%s",
             self._target_currency,
         )
@@ -237,7 +237,7 @@ class YahooFinanceSensor(CoordinatorEntity, SensorEntity):
             and super().available
             and not self._waiting_on_conversion
         )
-        _LOGGER.debug("%s available=%s", self._symbol, value)
+        LOGGER.debug("%s available=%s", self._symbol, value)
         return value
 
     @callback
@@ -280,7 +280,7 @@ class YahooFinanceSensor(CoordinatorEntity, SensorEntity):
 
         if self._target_currency and self._original_currency:
             if self._target_currency == self._original_currency:
-                _LOGGER.info("%s No conversion necessary", self._symbol)
+                LOGGER.info("%s No conversion necessary", self._symbol)
                 return None
 
             conversion_symbol = (
@@ -292,9 +292,9 @@ class YahooFinanceSensor(CoordinatorEntity, SensorEntity):
 
             if symbol_data is not None:
                 value = symbol_data[DATA_REGULAR_MARKET_PRICE]
-                _LOGGER.debug("%s %s is %s", self._symbol, conversion_symbol, value)
+                LOGGER.debug("%s %s is %s", self._symbol, conversion_symbol, value)
             else:
-                _LOGGER.info(
+                LOGGER.info(
                     "%s No data found for %s, symbol added to coordinator",
                     self._symbol,
                     conversion_symbol,
@@ -318,7 +318,7 @@ class YahooFinanceSensor(CoordinatorEntity, SensorEntity):
         financial_currency = symbol_data[DATA_FINANCIAL_CURRENCY]
         currency = symbol_data[DATA_CURRENCY_SYMBOL]
 
-        _LOGGER.debug(
+        LOGGER.debug(
             "%s currency=%s financialCurrency=%s",
             self._symbol,
             currency,
@@ -332,12 +332,12 @@ class YahooFinanceSensor(CoordinatorEntity, SensorEntity):
 
         data = self.coordinator.data
         if data is None:
-            _LOGGER.debug("%s Coordinator data is None", self._symbol)
+            LOGGER.debug("%s Coordinator data is None", self._symbol)
             return
 
         symbol_data: dict = data.get(self._symbol)
         if symbol_data is None:
-            _LOGGER.debug("%s Symbol data is None", self._symbol)
+            LOGGER.debug("%s Symbol data is None", self._symbol)
             return
 
         self._update_original_currency(symbol_data)
@@ -350,7 +350,7 @@ class YahooFinanceSensor(CoordinatorEntity, SensorEntity):
         # _market_price gets rounded in the `state` getter.
 
         if conversion:
-            _LOGGER.info(
+            LOGGER.info(
                 "%s converted %s X %s = %s",
                 self._symbol,
                 market_price,

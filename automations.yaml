@@ -166,24 +166,48 @@
 - id: '1704987487112'
   alias: Start Evening Scene
   description: ''
-  trigger:
-  - platform: time
-    at: '15:10:00'
+  triggers:
+  - at: '15:10:00'
     enabled: false
-  - platform: state
-    entity_id:
+    trigger: time
+  - entity_id:
     - binary_sensor.evening
     from: 'off'
     to: 'on'
-  condition:
+    trigger: state
+  conditions:
   - condition: numeric_state
     entity_id: zone.home
     above: 0
-  action:
-  - service: scene.turn_on
-    metadata: {}
+  actions:
+  - if:
+    - condition: numeric_state
+      entity_id: sensor.4_in_1_sensor_illuminance
+      above: 90
+    then:
+    - delay:
+        hours: 0
+        minutes: 30
+        seconds: 0
+    enabled: false
+  - alias: Repeat 5 min delay until illuminance < 90
+    repeat:
+      sequence:
+      - delay:
+          hours: 0
+          minutes: 5
+          seconds: 0
+          milliseconds: 0
+      until:
+      - condition: numeric_state
+        entity_id: sensor.4_in_1_sensor_illuminance
+        below: 90
+    enabled: true
+  - metadata: {}
     target:
       entity_id: scene.new_scene
+    action: scene.turn_on
+    data: {}
   mode: single
 - id: '1704987608078'
   alias: Start Late Evening Scene
@@ -743,12 +767,6 @@
     entity_id: 342ae966cd82e31e39ad29bbbc2a3101
     domain: switch
   - type: turn_on
-    device_id: f74c162ab05297da35f890646c69505c
-    entity_id: d00057719718d105198df6fc5d1d88c5
-    domain: light
-    brightness_pct: 1
-    enabled: true
-  - type: turn_on
     device_id: 5829208fee27eb6a433843619cdb513b
     entity_id: 85981c6a805db298e542a2db49519285
     domain: light
@@ -759,6 +777,12 @@
     target:
       device_id: 8f357dc008c756a0c7befc6f753ee9ca
     action: light.turn_on
+  - type: turn_on
+    device_id: f74c162ab05297da35f890646c69505c
+    entity_id: d00057719718d105198df6fc5d1d88c5
+    domain: light
+    brightness_pct: 1
+    enabled: true
   mode: single
 - id: '1706460125015'
   alias: Start Movietime
@@ -788,7 +812,14 @@
     zone: zone.home
     event: enter
     trigger: zone
-  conditions: []
+  - trigger: state
+    entity_id:
+    - sensor.shawn_pixel_6a_wifi_connection
+    to: mach9
+  conditions:
+  - condition: state
+    entity_id: input_boolean.shawn_wifi_glitch_ignore
+    state: 'off'
   actions:
   - metadata: {}
     data:
@@ -799,6 +830,17 @@
     target:
       device_id: 41e1a2654c488b6bd1dd4e508f66dfa1
     action: light.turn_on
+  - alias: Turn on Shawn' Lamp if not daytime
+    if:
+    - condition: state
+      entity_id: binary_sensor.daytime
+      state: 'off'
+    then:
+    - type: turn_on
+      device_id: 150a74da55af06b00ef1406b2f13e56b
+      entity_id: 9b974f7273f25e8839fda7d701000eac
+      domain: switch
+    enabled: false
   - type: turn_on
     device_id: 150a74da55af06b00ef1406b2f13e56b
     entity_id: 9b974f7273f25e8839fda7d701000eac
@@ -806,6 +848,7 @@
   - metadata: {}
     data:
       message: Shawn's Home!
+      target: Office
     action: notify.google_assistant_sdk
   - type: turn_on
     device_id: 6702c509cc29de049efd71996f5e21b8
@@ -817,6 +860,12 @@
     entity_id: deac8380bed9f840d5ee7b92d12e7570
     domain: switch
     enabled: false
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+    alias: Delay for 5m so not to run multiple times from different triggers
   mode: single
 - id: '1706639541431'
   alias: Start Work - Office Lamp On
@@ -847,44 +896,74 @@
 - id: '1706821946664'
   alias: Shawn left school 2
   description: ''
-  trigger:
-  - platform: zone
-    entity_id: person.shawn_derousse
+  triggers:
+  - entity_id: person.shawn_derousse
     zone: zone.school
     event: leave
-  condition: []
-  action:
-  - service: notify.google_assistant_sdk
-    metadata: {}
+    trigger: zone
+  - trigger: state
+    entity_id:
+    - sensor.shawn_pixel_6a_wifi_connection
+    from: NCC-1701-D
+    to:
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+  conditions: []
+  actions:
+  - metadata: {}
     data:
       message: Shawn left
+    action: notify.mobile_app_mike_pixel_6a
+  - metadata: {}
+    data:
+      message: Shawn left
+      target: office
+    action: notify.google_assistant_sdk
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+    alias: Delay for 5m so not to run multiple times from different triggers
   mode: single
 - id: '1706822002343'
   alias: Shawn arrived at school
   description: ''
-  trigger:
-  - platform: zone
-    entity_id: person.shawn_derousse
+  triggers:
+  - entity_id: person.shawn_derousse
     zone: zone.school
     event: enter
-  condition: []
-  action:
-  - service: notify.google_assistant_sdk
-    metadata: {}
+    trigger: zone
+  - trigger: state
+    entity_id:
+    - sensor.shawn_pixel_6a_wifi_connection
+    to: NCC-1701-D
+  conditions: []
+  actions:
+  - metadata: {}
     data:
       message: Shawn has arrived at school
       target:
       - office
       - our bedroom
     enabled: false
-  - service: notify.google_assistant_sdk
-    metadata: {}
+    action: notify.google_assistant_sdk
+  - metadata: {}
     data:
       message: Shawn has arrived at school
+      target: Office
+    action: notify.google_assistant_sdk
   - device_id: ca3df69b734d4a8e330e649d5846fc2a
     domain: light
     entity_id: a99c03a0e78258b1262000f74dfae7e7
     type: flash
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
   mode: single
 - id: '1707245230413'
   alias: Time to wrap up work
@@ -915,20 +994,20 @@
 - id: e1cb2b7c-0423-11eb-adc1-0242ac120002
   alias: NWS Tornado Watch Notification 2
   description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id:
+  triggers:
+  - entity_id:
     - sensor.randolph_active_alerts
     attribute: tornado_watch_count
     above: 0
     id: watch
-  - platform: numeric_state
-    entity_id:
+    trigger: numeric_state
+  - entity_id:
     - sensor.randolph_active_alerts
     attribute: tornado_watch_count
     below: 1
     id: cancel
-  action:
+    trigger: numeric_state
+  actions:
   - choose:
     - conditions:
       - condition: trigger
@@ -939,13 +1018,12 @@
           minutes: 1
           seconds: 0
           milliseconds: 0
-      - service: notify.google_assistant_sdk
-        data:
+      - data:
           message: '{{ states(''sensor.tornado_watch_details'') }}
 
             '
-      - service: tts.speak
-        target:
+        action: notify.google_assistant_sdk
+      - target:
           entity_id: tts.google_en_com
         data:
           cache: true
@@ -954,32 +1032,46 @@
 
             '
         enabled: false
+        action: tts.speak
+      - action: notify.chromecast_with_google_tv
+        data:
+          message: '{{ states(''sensor.tornado_watch_details'') }}'
+          data:
+            fontsize: max
+            position: center
+            duration: 60
+            color: indigo
+            interrupt: true
+            transparency: 25%
+            icon:
+              url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+          title: Tornado Watch
     - conditions:
       - condition: trigger
         id: cancel
       sequence:
-      - service: notify.google_assistant_sdk
-        data:
+      - data:
           message: Tornado watch no longer in effect for Randolph County
+        action: notify.google_assistant_sdk
   mode: single
 - id: '1707537033382'
   alias: NWS Thunderstorm Watch Notification
   description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id:
+  triggers:
+  - entity_id:
     - sensor.randolph_active_alerts
     attribute: tstorm_watch_count
     above: 0
     id: watch
-  - platform: numeric_state
-    entity_id:
+    trigger: numeric_state
+  - entity_id:
     - sensor.randolph_active_alerts
     attribute: tstorm_watch_count
     below: 1
     id: cancel
-  condition: []
-  action:
+    trigger: numeric_state
+  conditions: []
+  actions:
   - choose:
     - conditions:
       - condition: trigger
@@ -990,14 +1082,13 @@
           minutes: 1
           seconds: 0
           milliseconds: 0
-      - service: notify.google_assistant_sdk
-        data:
+      - data:
           message: '{{ states(''sensor.tstorm_watch_details'') }}
 
             '
         enabled: false
-      - service: tts.speak
-        target:
+        action: notify.google_assistant_sdk
+      - target:
           entity_id: tts.google_en_com
         data:
           cache: true
@@ -1006,43 +1097,57 @@
 
             '
         enabled: false
-      - service: notify.google_assistant_sdk
-        metadata: {}
+        action: tts.speak
+      - metadata: {}
         data:
           message: '{{ states(''sensor.tstorm_watch_details'') }}
 
             '
+        action: notify.google_assistant_sdk
+      - action: notify.chromecast_with_google_tv
+        data:
+          message: '{{ states(''sensor.tstorm_watch_details'') }}'
+          data:
+            fontsize: max
+            position: center
+            duration: 60
+            color: indigo
+            interrupt: true
+            transparency: 25%
+            icon:
+              url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+          title: Thunderstorm Watch
     - conditions:
       - condition: trigger
         id: cancel
       sequence:
-      - service: notify.google_assistant_sdk
-        data:
+      - data:
           message: Thunderstorm watch no longer in effect for Randolph County
         enabled: false
-      - service: notify.google_assistant_sdk
-        metadata: {}
+        action: notify.google_assistant_sdk
+      - metadata: {}
         data:
           message: Thunderstorm watch no longer in effect for Randolph County
+        action: notify.google_assistant_sdk
   mode: single
 - id: '1707537181438'
   alias: NWS Thunderstorm Warning Notification
   description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id:
+  triggers:
+  - entity_id:
     - sensor.randolph_active_alerts
     attribute: tstorm_warning_count
     above: 0
     id: watch
-  - platform: numeric_state
-    entity_id:
+    trigger: numeric_state
+  - entity_id:
     - sensor.randolph_active_alerts
     attribute: tstorm_warning_count
     below: 1
     id: cancel
-  condition: []
-  action:
+    trigger: numeric_state
+  conditions: []
+  actions:
   - choose:
     - conditions:
       - condition: trigger
@@ -1053,18 +1158,17 @@
           minutes: 1
           seconds: 0
           milliseconds: 0
-      - service: notify.google_assistant_sdk
-        data:
+      - data:
           message: '{{ states(''sensor.tstorm_warning_details'') }}
 
             '
-      - service: google_assistant_sdk.send_text_command
-        metadata: {}
+        action: notify.google_assistant_sdk
+      - metadata: {}
         data:
           command: broadcast,{{ states('sensor.tstorm_warning_details') }}
         enabled: false
-      - service: tts.speak
-        target:
+        action: google_assistant_sdk.send_text_command
+      - target:
           entity_id: tts.google_en_com
         data:
           cache: true
@@ -1073,32 +1177,46 @@
 
             '
         enabled: false
+        action: tts.speak
+      - action: notify.chromecast_with_google_tv
+        data:
+          message: '{{ states(''sensor.tstorm_warning_details'') }}'
+          data:
+            fontsize: max
+            position: center
+            duration: 60
+            color: red
+            interrupt: true
+            transparency: 25%
+            icon:
+              url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+          title: Thunderstorm Warning
     - conditions:
       - condition: trigger
         id: cancel
       sequence:
-      - service: notify.google_assistant_sdk
-        data:
+      - data:
           message: Thunderstorm warning no longer in effect for Randolph County
+        action: notify.google_assistant_sdk
   mode: single
 - id: '1707537242170'
   alias: NWS Tornado Warning Notification
   description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id:
+  triggers:
+  - entity_id:
     - sensor.randolph_active_alerts
     attribute: tornado_warning_count
     above: 0
     id: watch
-  - platform: numeric_state
-    entity_id:
+    trigger: numeric_state
+  - entity_id:
     - sensor.randolph_active_alerts
     attribute: tornado_warning_count
     below: 1
     id: cancel
-  condition: []
-  action:
+    trigger: numeric_state
+  conditions: []
+  actions:
   - choose:
     - conditions:
       - condition: trigger
@@ -1109,13 +1227,12 @@
           minutes: 1
           seconds: 0
           milliseconds: 0
-      - service: notify.google_assistant_sdk
-        data:
+      - data:
           message: '{{ states(''sensor.tornado_warning_details'') }}
 
             '
-      - service: tts.speak
-        target:
+        action: notify.google_assistant_sdk
+      - target:
           entity_id: tts.google_en_com
         data:
           cache: true
@@ -1124,13 +1241,27 @@
 
             '
         enabled: false
+        action: tts.speak
+      - action: notify.chromecast_with_google_tv
+        data:
+          message: '{{ states(''sensor.tornado_warning_details'') }}'
+          data:
+            fontsize: max
+            position: center
+            duration: 60
+            color: red
+            interrupt: true
+            transparency: 25%
+            icon:
+              url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+          title: Tornado Warning
     - conditions:
       - condition: trigger
         id: cancel
       sequence:
-      - service: notify.google_assistant_sdk
-        data:
+      - data:
           message: Tornado warning no longer in effect for Randolph County
+        action: notify.google_assistant_sdk
   mode: single
 - id: '1707537314410'
   alias: NWS Test Notification
@@ -1181,33 +1312,34 @@
 - id: '1707537384959'
   alias: NWS Advisory Notification
   description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id:
+  triggers:
+  - entity_id:
     - sensor.randolph_active_alerts
     attribute: advisory_count
     above: 0
     id: watch
-  - platform: numeric_state
-    entity_id:
+    trigger: numeric_state
+  - entity_id:
     - sensor.randolph_active_alerts
     attribute: advisory_count
     below: 1
     id: cancel
-  condition: []
-  action:
+    trigger: numeric_state
+  conditions: []
+  actions:
   - choose:
     - conditions:
-      - condition: trigger
-        id: watch
+      - condition: not
+        conditions:
+        - condition: trigger
+          id: watch
       sequence:
-      - service: notify.google_assistant_sdk
-        data:
+      - data:
           message: '{{ states(''sensor.weather_advisory_details'') }}
 
             '
-      - service: tts.speak
-        target:
+        action: notify.google_assistant_sdk
+      - target:
           entity_id: tts.google_en_com
         data:
           cache: true
@@ -1216,13 +1348,14 @@
 
             '
         enabled: false
+        action: tts.speak
     - conditions:
       - condition: trigger
         id: cancel
       sequence:
-      - service: notify.google_assistant_sdk
-        data:
+      - data:
           message: Weather Advisory no longer in effect for Randolph County
+        action: notify.google_assistant_sdk
   mode: single
 - id: '1707537439689'
   alias: NWS Statement Notification
@@ -1309,12 +1442,12 @@
 - id: '1708440747335'
   alias: Office Lamp On when not bright
   description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id:
+  triggers:
+  - entity_id:
     - sensor.4_in_1_sensor_illuminance
-    below: 80
-  condition:
+    below: 85
+    trigger: numeric_state
+  conditions:
   - condition: and
     conditions:
     - condition: state
@@ -1323,19 +1456,19 @@
     - condition: zone
       entity_id: person.mike_derousse
       zone: zone.home
-  action:
+  actions:
   - type: turn_on
     device_id: ca3df69b734d4a8e330e649d5846fc2a
     entity_id: a99c03a0e78258b1262000f74dfae7e7
     domain: light
     enabled: false
-  - service: light.turn_on
-    metadata: {}
+  - metadata: {}
     data:
       transition: 60
       brightness_pct: 60
     target:
       device_id: ca3df69b734d4a8e330e649d5846fc2a
+    action: light.turn_on
   mode: single
 - id: '1708775454920'
   alias: Hall Light - Ping on schedule
@@ -1498,11 +1631,24 @@
   - condition: time
     after: 08:00:00
   actions:
+  - action: notify.chromecast_with_google_tv
+    data:
+      message: The washing machine<br> has finished the load.
+      data:
+        fontsize: max
+        position: center
+        duration: 15
+        color: indigo
+        interrupt: true
+        transparency: 25%
+        icon:
+          url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+      title: Washing Complete
   - metadata: {}
     data:
       message: The washing machine has finished the load
     action: notify.google_assistant_sdk
-    enabled: false
+    enabled: true
   - action: chime_tts.say
     target:
       entity_id:
@@ -1514,6 +1660,7 @@
       offset: 1000
       volume_level: 0.7
       announce: true
+    enabled: false
   - metadata: {}
     data: {}
     target:
@@ -1540,14 +1687,27 @@
       after: 08:00:00
       before: '22:00:00'
   actions:
+  - action: notify.chromecast_with_google_tv
+    data:
+      message: The washing machine has finished the load.
+      data:
+        fontsize: max
+        position: center
+        duration: 15
+        color: red
+        interrupt: 1
+        transparency: 25%
+        icon:
+          url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+      title: Don't Forget!!
   - action: script.set_google_home_volumes_for_announcement
     metadata: {}
     data: {}
-    enabled: false
+    enabled: true
   - metadata: {}
     data:
       message: Don't Forget. The washing machine has finished the load
-    enabled: false
+    enabled: true
     action: notify.google_assistant_sdk
   - metadata: {}
     data:
@@ -1572,7 +1732,7 @@
   - action: script.set_google_home_volumes_to_50_percent
     metadata: {}
     data: {}
-    enabled: false
+    enabled: true
   - action: chime_tts.say
     target:
       entity_id:
@@ -1584,6 +1744,7 @@
       offset: 1000
       volume_level: 0.8
       announce: true
+    enabled: false
   mode: single
 - id: '1714586113784'
   alias: Check Weather Test
@@ -1874,30 +2035,65 @@
 - id: '1720189682915'
   alias: Show doorbell visitor on google hub
   description: ''
-  trigger:
+  triggers:
   - type: turned_on
-    platform: device
     device_id: 1f1c7fff2820757e037d63af95626c57
     entity_id: b107251d8dcce16a72d0082621e2f5c2
     domain: binary_sensor
-  condition: []
-  action:
-  - service: camera.play_stream
-    metadata: {}
+    trigger: device
+  - type: turned_on
+    device_id: 1f1c7fff2820757e037d63af95626c57
+    entity_id: b2efebe043ae2d82688925969e675329
+    domain: binary_sensor
+    trigger: device
+    enabled: false
+  conditions: []
+  actions:
+  - action: notify.chromecast_with_google_tv
+    data:
+      message: Doorbell Notification
+      data:
+        duration: 2
+        position: bottom-right
+        fontsize: small
+        transparency: 25%
+        color: indigo
+        interrupt: 1
+        image:
+          url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+    enabled: false
+  - action: notify.chromecast_with_google_tv
+    data:
+      message: Doorbell Notification
+      data:
+        duration: 60
+        position: bottom-right
+        fontsize: small
+        transparency: 25%
+        color: indigo
+        interrupt: 1
+        image:
+          url: http://192.168.86.166/cgi-bin/api.cgi?cmd=Snap&channel=0&user=admin&password=15THREOUS3OFF2Q78X172&width=640&height=360
+    enabled: true
+  - metadata: {}
     data:
       format: hls
       media_player: media_player.living_room_hub
     target:
       device_id: 1f1c7fff2820757e037d63af95626c57
+    action: camera.play_stream
+    enabled: false
   - delay:
       hours: 0
       minutes: 5
       seconds: 0
       milliseconds: 0
-  - service: media_player.media_stop
-    target:
+    enabled: false
+  - target:
       entity_id: media_player.living_room_hub
     data: {}
+    action: media_player.media_stop
+    enabled: false
   mode: single
 - id: '1722602001924'
   alias: Climate Control
@@ -2061,32 +2257,6 @@
       minutes: 1
       seconds: 0
   - if:
-    - condition: or
-      conditions:
-      - condition: device
-        device_id: 676d91012991c5a9958a750c22cbd725
-        domain: media_player
-        entity_id: 47fedf57248aec63f3752be2a174e53f
-        type: is_off
-      - condition: device
-        device_id: 676d91012991c5a9958a750c22cbd725
-        domain: media_player
-        entity_id: 47fedf57248aec63f3752be2a174e53f
-        type: is_idle
-    then:
-    - action: light.turn_off
-      metadata: {}
-      data: {}
-      target:
-        device_id: ac119e43b5766b05f5541b84972f400d
-    enabled: false
-  - alias: Turn off the light
-    target:
-      device_id: ac119e43b5766b05f5541b84972f400d
-    action: light.turn_off
-    data: {}
-    enabled: false
-  - if:
     - condition: state
       entity_id: input_boolean.master_bathroom_light_switch_persistent_on
       state: 'off'
@@ -2104,6 +2274,11 @@
           domain: media_player
           entity_id: 47fedf57248aec63f3752be2a174e53f
           type: is_idle
+        - condition: device
+          device_id: 676d91012991c5a9958a750c22cbd725
+          domain: media_player
+          entity_id: 47fedf57248aec63f3752be2a174e53f
+          type: is_paused
       then:
       - action: light.turn_off
         metadata: {}
@@ -2768,6 +2943,19 @@
           offset: 1000
           volume_level: 0.6
           announce: true
+      - action: notify.chromecast_with_google_tv
+        data:
+          message: '{{ states(''sensor.wstorm_warning_details'') }}'
+          data:
+            fontsize: max
+            position: center
+            duration: 60
+            color: red
+            interrupt: true
+            transparency: 25%
+            icon:
+              url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+          title: Winter Storm Warning
     - conditions:
       - condition: trigger
         id: cancel
@@ -2852,6 +3040,19 @@
           offset: 1000
           volume_level: 0.6
           announce: true
+      - action: notify.chromecast_with_google_tv
+        data:
+          message: '{{ states(''sensor.wstorm_watch_details'') }}'
+          data:
+            fontsize: max
+            position: center
+            duration: 60
+            color: red
+            interrupt: true
+            transparency: 25%
+            icon:
+              url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+          title: Winter Storm Watch
     - conditions:
       - condition: trigger
         id: cancel
@@ -2876,4 +3077,791 @@
           offset: 1000
           volume_level: 0.6
           announce: true
+  mode: single
+- id: '1741622168312'
+  alias: Test Google Broadcast
+  description: ''
+  triggers: []
+  conditions: []
+  actions:
+  - metadata: {}
+    data:
+      message: The washing machine has finished the load
+      target: living room
+    action: notify.google_assistant_sdk
+    enabled: true
+  mode: single
+- id: '1741959480401'
+  alias: Notify weather messages when TV is turned on
+  description: ''
+  triggers:
+  - device_id: 61fff8417f2021f7dcdb5155938d7f03
+    domain: media_player
+    entity_id: 891c6b59d65065f4fa8e0db0beca78a1
+    type: turned_on
+    trigger: device
+  conditions:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: sensor.weather_advisory_details
+      state: unknown
+    enabled: false
+  actions:
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: sensor.weather_advisory_details
+        state: unknown
+    then:
+    - action: notify.chromecast_with_google_tv
+      data:
+        message: '{{ states(''sensor.weather_advisory_details'') }}'
+        data:
+          fontsize: max
+          position: center
+          duration: 60
+          color: red
+          interrupt: true
+          transparency: 25%
+          icon:
+            url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+        title: Weather Advisory
+    enabled: false
+  - if:
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: sensor.tstorm_warning_details
+        state: unknown
+    then:
+    - action: notify.chromecast_with_google_tv
+      data:
+        message: '{{ states(''sensor.tstorm_warning_details'') }}'
+        data:
+          fontsize: max
+          position: center
+          duration: 60
+          color: red
+          interrupt: true
+          transparency: 25%
+          icon:
+            url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+        title: Weather Advisory
+    enabled: false
+  - alias: Display weather advisory if not blank
+    if:
+    - condition: template
+      value_template: '{{ states(''sensor.weather_advisory_details'') != '''' }}'
+    then:
+    - action: notify.chromecast_with_google_tv
+      data:
+        message: '{{ states(''sensor.weather_advisory_details'') }}'
+        data:
+          fontsize: max
+          position: center
+          duration: 60
+          color: indigo
+          interrupt: true
+          transparency: 25%
+          icon:
+            url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+        title: Weather Advisory
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 15
+        milliseconds: 0
+  - alias: Display Tstorm Warning if not blank
+    if:
+    - condition: template
+      value_template: '{{ states(''sensor.tstorm_warning_details'') != '''' }}'
+    then:
+    - action: notify.chromecast_with_google_tv
+      data:
+        message: '{{ states(''sensor.tstorm_warning_details'') }}'
+        data:
+          fontsize: max
+          position: center
+          duration: 60
+          color: red
+          interrupt: true
+          transparency: 25%
+          icon:
+            url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+        title: Thunder Storm Warning
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 15
+        milliseconds: 0
+  - alias: Display Tstorm Watch if not blank
+    if:
+    - condition: template
+      value_template: '{{ states(''sensor.tstorm_watch_details'') != '''' }}'
+    then:
+    - action: notify.chromecast_with_google_tv
+      data:
+        message: '{{ states(''sensor.tstorm_warning_details'') }}'
+        data:
+          fontsize: max
+          position: center
+          duration: 60
+          color: red
+          interrupt: true
+          transparency: 25%
+          icon:
+            url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+        title: Thunder Storm Watch
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 15
+        milliseconds: 0
+  - alias: Display Tornado Warning if not blank
+    if:
+    - condition: template
+      value_template: '{{ states(''sensor.tornado_warning_details'') != '''' }}'
+    then:
+    - action: notify.chromecast_with_google_tv
+      data:
+        message: '{{ states(''sensor.tornado_warning_details'') }}'
+        data:
+          fontsize: max
+          position: center
+          duration: 60
+          color: red
+          interrupt: true
+          transparency: 25%
+          icon:
+            url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+        title: Tornado Warning
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 15
+        milliseconds: 0
+  - alias: Display Tornado Watch if not blank
+    if:
+    - condition: template
+      value_template: '{{ states(''sensor.tornado_watch_details'') != '''' }}'
+    then:
+    - action: notify.chromecast_with_google_tv
+      data:
+        message: '{{ states(''sensor.tornado_watch_details'') }}'
+        data:
+          fontsize: max
+          position: center
+          duration: 60
+          color: indigo
+          interrupt: true
+          transparency: 25%
+          icon:
+            url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+        title: Tornado Watch
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 15
+        milliseconds: 0
+  - alias: Display Wstorm Warning if not blank
+    if:
+    - condition: template
+      value_template: '{{ states(''sensor.wstorm_warning_details'') != '''' }}'
+    then:
+    - action: notify.chromecast_with_google_tv
+      data:
+        message: '{{ states(''sensor.wstorm_warning_details'') }}'
+        data:
+          fontsize: max
+          position: center
+          duration: 60
+          color: red
+          interrupt: true
+          transparency: 25%
+          icon:
+            url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+        title: Winter Storm Warning
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 15
+        milliseconds: 0
+  - alias: Display Wstorm Watch if not blank
+    if:
+    - condition: template
+      value_template: '{{ states(''sensor.wstorm_watch_details'') != '''' }}'
+    then:
+    - action: notify.chromecast_with_google_tv
+      data:
+        message: '{{ states(''sensor.wstorm_watch_details'') }}'
+        data:
+          fontsize: max
+          position: center
+          duration: 60
+          color: indigo
+          interrupt: true
+          transparency: 25%
+          icon:
+            url: https://play-lh.googleusercontent.com/bGn6qxUHwqZmgtv7RwgxCzl4Uy26SFQrJljVmoOvoIKWa-Xty8s0vOUWcgovUAEAKXnI=w240-h480-rw
+        title: Winter Storm Watch
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 15
+        milliseconds: 0
+  mode: single
+- id: '1743029276306'
+  alias: Show doorbell camera on TV
+  description: ''
+  triggers:
+  - type: turned_on
+    device_id: 1f1c7fff2820757e037d63af95626c57
+    entity_id: b2efebe043ae2d82688925969e675329
+    domain: binary_sensor
+    trigger: device
+  conditions: []
+  actions:
+  - action: notify.chromecast_with_google_tv
+    data:
+      data:
+        duration: 30
+        position: bottom-right
+        fontsize: small
+        transparency: 25%
+        color: indigo
+        interrupt: 1
+        image:
+          url: http://192.168.86.166/cgi-bin/api.cgi?cmd=Snap&channel=0&user=admin&password=15THREOUS3OFF2Q78X172&width=640&height=360
+      message: Human at front door
+    enabled: true
+  mode: single
+- id: '1745289940954'
+  alias: Doorbell Notification
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.reolink_front_video_doorbell_visitor
+    to: 'on'
+  conditions: []
+  actions:
+  - action: camera.snapshot
+    metadata: {}
+    data:
+      filename: /media/reolink_snapshot/last_snapshot_doorbell.jpg
+    target:
+      entity_id: camera.reolink_front_video_doorbell_fluent
+  - action: notify.mobile_app_mike_pixel_6a
+    metadata: {}
+    data:
+      message: Someone rang the doorbell
+      data:
+        image: /media/local/reolink_snapshot/last_snapshot_doorbell.jpg
+      title: Doorbell
+  mode: single
+- id: '1747841776133'
+  alias: Update BTC All Time High
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.yahoofinance_btc_usd
+  conditions:
+  - condition: template
+    value_template: '{{ states(''sensor.yahoofinance_btc_usd'') | float > states(''input_number.btc_all_time_high'')
+      | float }}'
+  actions:
+  - action: input_number.set_value
+    metadata: {}
+    data:
+      value: '{{ states(''sensor.yahoofinance_btc_usd'') | float }}'
+    target:
+      entity_id: input_number.btc_all_time_high
+  mode: single
+- id: '1747842703365'
+  alias: Announce BTC ATH
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_number.btc_all_time_high
+  conditions: []
+  actions:
+  - metadata: {}
+    data:
+      message: Bitcoin has reached a new all time high of {{ states('input_number.btc_all_time_high')
+        | float }}
+      target: Office
+    action: notify.google_assistant_sdk
+  mode: single
+- id: '1748123594759'
+  alias: Remind Medication Eliquis PM
+  description: ''
+  triggers:
+  - at: '19:00:00'
+    trigger: time
+  actions:
+  - target:
+      entity_id: input_boolean.eliquis
+    action: input_boolean.turn_off
+    data: {}
+  - alias: Notify until the medication has been take
+    repeat:
+      while:
+      - condition: state
+        entity_id: input_boolean.eliquis
+        state: 'off'
+      sequence:
+      - data:
+          name: Medication reminder!
+          message: Reminder sent
+          entity_id: input_boolean.eliquis
+        action: logbook.log
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: '{{ true }}'
+          sequence:
+          - metadata: {}
+            data:
+              message: Yo Mike - It's time to take your pill
+            enabled: true
+            action: notify.google_assistant_sdk
+      - device_id: 3dcf40063e5611d33f788c6a60256c87
+        domain: mobile_app
+        type: notify
+        title: Medication reminder!
+        message: It's time to take your Eliquis
+        data:
+          actions:
+          - title: Taken
+            action: taken
+          - title: Ask later
+            action: later
+          - title: Skip
+            action: skip
+          tag: input_boolean.eliquis
+      - wait_for_trigger:
+          event_type: mobile_app_notification_action
+          event_data:
+            tag: input_boolean.eliquis
+          trigger: event
+        timeout:
+          minutes: 15
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: '{{ wait.trigger and wait.trigger.event.data.action ==
+              ''taken'' }}'
+          sequence:
+          - target:
+              entity_id: input_boolean.eliquis
+            action: input_boolean.turn_on
+            data: {}
+          - data:
+              name: Medication reminder!
+              message: Medication taken
+              entity_id: input_boolean.eliquis
+            action: logbook.log
+          - action: input_datetime.set_datetime
+            metadata: {}
+            data:
+              timestamp: '{{ now().timestamp() }}'
+            target:
+              entity_id: input_datetime.eliquis_adherence
+          - action: counter.decrement
+            metadata: {}
+            data: {}
+            target:
+              entity_id:
+              - counter.pill_count_eliquis
+        - conditions:
+          - condition: template
+            value_template: '{{ wait.trigger and wait.trigger.event.data.action ==
+              ''later'' }}'
+          sequence:
+          - data:
+              name: Medication reminder!
+              message: Postpone reminder
+              entity_id: input_boolean.eliquis
+            action: logbook.log
+          - delay:
+              minutes: 15
+        - conditions:
+          - condition: template
+            value_template: '{{ wait.trigger and wait.trigger.event.data.action ==
+              ''skip'' }}'
+          sequence:
+          - target:
+              entity_id: input_boolean.eliquis
+            action: input_boolean.turn_on
+            data: {}
+          - data:
+              name: Medication reminder!
+              message: Reminder skipped
+              entity_id: input_boolean.eliquis
+            action: logbook.log
+        default:
+        - device_id: 3dcf40063e5611d33f788c6a60256c87
+          domain: mobile_app
+          type: notify
+          message: clear_notification
+          data:
+            tag: input_boolean.eliquis
+        - data:
+            name: Medication reminder!
+            message: No answer time out
+            entity_id: input_boolean.eliquis
+          action: logbook.log
+  mode: restart
+- id: '1748123766801'
+  alias: Remind Medication Eliquis AM
+  description: ''
+  triggers:
+  - at: 07:00:00
+    trigger: time
+  actions:
+  - target:
+      entity_id: input_boolean.eliquis
+    action: input_boolean.turn_off
+    data: {}
+  - alias: Notify until the medication has been take
+    repeat:
+      while:
+      - condition: state
+        entity_id: input_boolean.eliquis
+        state: 'off'
+      sequence:
+      - data:
+          name: Medication reminder!
+          message: Reminder sent
+          entity_id: input_boolean.eliquis
+        action: logbook.log
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: '{{ true }}'
+          sequence: []
+      - device_id: 3dcf40063e5611d33f788c6a60256c87
+        domain: mobile_app
+        type: notify
+        title: Medication reminder!
+        message: It's time to take your Eliquis
+        data:
+          actions:
+          - title: Taken
+            action: taken
+          - title: Ask later
+            action: later
+          - title: Skip
+            action: skip
+          tag: input_boolean.eliquis
+      - wait_for_trigger:
+          event_type: mobile_app_notification_action
+          event_data:
+            tag: input_boolean.eliquis
+          trigger: event
+        timeout:
+          minutes: 5
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: '{{ wait.trigger and wait.trigger.event.data.action ==
+              ''taken'' }}'
+          sequence:
+          - target:
+              entity_id: input_boolean.eliquis
+            action: input_boolean.turn_on
+            data: {}
+          - data:
+              name: Medication reminder!
+              message: Medication taken
+              entity_id: input_boolean.eliquis
+            action: logbook.log
+          - action: input_datetime.set_datetime
+            metadata: {}
+            data:
+              timestamp: '{{ now().timestamp() }}'
+            target:
+              entity_id: input_datetime.eliquis_adherence
+          - action: counter.decrement
+            metadata: {}
+            data: {}
+            target:
+              entity_id:
+              - counter.pill_count_eliquis
+        - conditions:
+          - condition: template
+            value_template: '{{ wait.trigger and wait.trigger.event.data.action ==
+              ''later'' }}'
+          sequence:
+          - data:
+              name: Medication reminder!
+              message: Postpone reminder
+              entity_id: input_boolean.eliquis
+            action: logbook.log
+          - delay:
+              hours: 0
+              minutes: 15
+              seconds: 0
+              milliseconds: 0
+        - conditions:
+          - condition: template
+            value_template: '{{ wait.trigger and wait.trigger.event.data.action ==
+              ''skip'' }}'
+          sequence:
+          - target:
+              entity_id: input_boolean.eliquis
+            action: input_boolean.turn_on
+            data: {}
+          - data:
+              name: Medication reminder!
+              message: Reminder skipped
+              entity_id: input_boolean.eliquis
+            action: logbook.log
+        default:
+        - device_id: 3dcf40063e5611d33f788c6a60256c87
+          domain: mobile_app
+          type: notify
+          message: clear_notification
+          data:
+            tag: input_boolean.eliquis
+        - data:
+            name: Medication reminder!
+            message: No answer time out
+            entity_id: input_boolean.eliquis
+          action: logbook.log
+  mode: restart
+- id: '1748190879874'
+  alias: Reminder Medication Motoprolol
+  description: ''
+  triggers:
+  - at: '19:00:00'
+    trigger: time
+  conditions: []
+  actions:
+  - target:
+      entity_id: input_boolean.metoprolol
+    action: input_boolean.turn_off
+    data: {}
+  - alias: Notify until the medication has been take
+    repeat:
+      while:
+      - condition: state
+        entity_id: input_boolean.metoprolol
+        state: 'off'
+      sequence:
+      - data:
+          name: Medication reminder!
+          message: Reminder sent
+          entity_id: input_boolean.metoprolol
+        action: logbook.log
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: '{{ true }}'
+          sequence:
+          - metadata: {}
+            data:
+              message: Yo Mike - It's time to take your pill
+            enabled: false
+            action: notify.google_assistant_sdk
+      - device_id: 3dcf40063e5611d33f788c6a60256c87
+        domain: mobile_app
+        type: notify
+        title: Medication reminder!
+        message: It's time to take your Metoprolol
+        data:
+          actions:
+          - title: Taken
+            action: taken
+          - title: Ask later
+            action: later
+          - title: Skip
+            action: skip
+          tag: input_boolean.metoprolol
+      - wait_for_trigger:
+          event_type: mobile_app_notification_action
+          event_data:
+            tag: input_boolean.metoprolol
+          trigger: event
+        timeout:
+          minutes: 15
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: '{{ wait.trigger and wait.trigger.event.data.action ==
+              ''taken'' }}'
+          sequence:
+          - target:
+              entity_id: input_boolean.metoprolol
+            action: input_boolean.turn_on
+            data: {}
+          - data:
+              name: Medication reminder!
+              message: Medication taken
+              entity_id: input_boolean.metoprolol
+            action: logbook.log
+          - action: input_datetime.set_datetime
+            metadata: {}
+            data:
+              timestamp: '{{ now().timestamp() }}'
+            target:
+              entity_id: input_datetime.metoprolol_adherence
+          - action: counter.decrement
+            metadata: {}
+            data: {}
+            target:
+              entity_id: counter.pill_count_metoprolol
+        - conditions:
+          - condition: template
+            value_template: '{{ wait.trigger and wait.trigger.event.data.action ==
+              ''later'' }}'
+          sequence:
+          - data:
+              name: Medication reminder!
+              message: Postpone reminder
+              entity_id: input_boolean.metoprolol
+            action: logbook.log
+          - delay:
+              minutes: 15
+        - conditions:
+          - condition: template
+            value_template: '{{ wait.trigger and wait.trigger.event.data.action ==
+              ''skip'' }}'
+          sequence:
+          - target:
+              entity_id: input_boolean.metoprolol
+            action: input_boolean.turn_on
+            data: {}
+          - data:
+              name: Medication reminder!
+              message: Reminder skipped
+              entity_id: input_boolean.metoprolol
+            action: logbook.log
+        default:
+        - device_id: 3dcf40063e5611d33f788c6a60256c87
+          domain: mobile_app
+          type: notify
+          message: clear_notification
+          data:
+            tag: input_boolean.metoprolol
+        - data:
+            name: Medication reminder!
+            message: No answer time out
+            entity_id: input_boolean.metoprolol
+          action: logbook.log
+  mode: restart
+- id: '1750197650565'
+  alias: Notify - Water leak in master bath
+  description: ''
+  triggers:
+  - type: turned_on
+    device_id: a65eef6d508c64895bb2ab8a17102c5f
+    entity_id: 03b2018cbc2d0b9c8e2a7f103262f4c5
+    domain: binary_sensor
+    trigger: device
+  conditions: []
+  actions:
+  - metadata: {}
+    data:
+      message: A water leak has been detected in the master bathroom - please investigate
+        immediately!
+    enabled: true
+    action: notify.google_assistant_sdk
+  - metadata: {}
+    data:
+      message: Water detected in master bathroom!
+    action: notify.mobile_app_mike_pixel_6a
+  - data:
+      message: command_activity
+      data:
+        intent_package_name: com.google.android.deskclock
+        intent_action: android.intent.action.SET_TIMER
+        intent_extras: android.intent.extra.alarm.SKIP_UI:true,android.intent.extra.alarm.LENGTH:1
+    action: notify.mobile_app_mike_pixel_6a
+  - metadata: {}
+    data:
+      message: Water detected in master bathroom!
+    action: notify.mobile_app_shawn_pixel_6a
+  mode: single
+- id: '1750197864954'
+  alias: Remind - Water leak in master bathroom
+  description: ''
+  triggers:
+  - minutes: /5
+    trigger: time_pattern
+  conditions:
+  - condition: or
+    conditions:
+    - type: is_moist
+      condition: device
+      device_id: ce0836f49fa27fcb91beb3d6d440877a
+      entity_id: 11b0d66a183615a96ecc9b7026bf2463
+      domain: binary_sensor
+    - type: is_on
+      condition: device
+      device_id: a65eef6d508c64895bb2ab8a17102c5f
+      entity_id: 03b2018cbc2d0b9c8e2a7f103262f4c5
+      domain: binary_sensor
+  actions:
+  - metadata: {}
+    data:
+      message: Don't Forget. A water leak has been detected in the bathroom!
+    enabled: true
+    action: notify.google_assistant_sdk
+  mode: single
+- id: '1750251563109'
+  alias: Shawn Location Glitch Workaround
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.shawn_pixel_6a_wifi_connection
+    to:
+    from: mach9
+  - entity_id: person.shawn_derousse
+    zone: zone.home
+    event: enter
+    trigger: zone
+    enabled: false
+  - trigger: state
+    entity_id:
+    - sensor.shawn_pixel_6a_wifi_connection
+    to: mach9
+    enabled: false
+  conditions: []
+  actions:
+  - action: input_boolean.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.shawn_wifi_glitch_ignore
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  - action: input_boolean.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.shawn_wifi_glitch_ignore
+  - if:
+    - condition: state
+      entity_id: sensor.shawn_pixel_6a_wifi_connection
+      state: mach9
+    then:
+    - metadata: {}
+      data:
+        message: Shawn's wifi glitch averted
+        target: Office
+      action: notify.google_assistant_sdk
   mode: single

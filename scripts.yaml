@@ -1,32 +1,32 @@
 wake_up_mik:
   alias: Wake up Mike
   sequence:
-  - service: media_player.volume_set
-    metadata: {}
+  - metadata: {}
     data:
       volume_level: 0.35
     target:
       entity_id: media_player.bathroom_speaker
-  - service: google_assistant_sdk.send_text_command
-    data:
+    action: media_player.volume_set
+  - data:
       command: Play podcast
       media_player: media_player.bathroom_speaker
     enabled: false
-  - service: media_player.play_media
-    target:
-      entity_id: media_player.bathroom_speaker
-    data:
-      media_content_type: episode
-      media_content_id: '{{ states.sensor.podcast_albert_mohler_briefing.state }}'
-  - service: media_player.media_stop
-    target:
-      entity_id: media_player.bathroom_speaker
-    data: {}
-    enabled: false
+    action: google_assistant_sdk.send_text_command
   - type: turn_on
     device_id: 1249099eca75734d22db1c3382366029
     entity_id: 98d34efb00d2316fb1f573142402fe48
     domain: switch
+  - target:
+      entity_id: media_player.bathroom_speaker
+    data:
+      media_content_type: episode
+      media_content_id: '{{ states.sensor.podcast_albert_mohler_briefing.state }}'
+    action: media_player.play_media
+  - target:
+      entity_id: media_player.bathroom_speaker
+    data: {}
+    enabled: false
+    action: media_player.media_stop
   - delay:
       hours: 0
       minutes: 1
@@ -38,6 +38,7 @@ wake_up_mik:
     entity_id: 98d34efb00d2316fb1f573142402fe48
     domain: switch
   mode: single
+  description: ''
 going_to_bed:
   alias: Going to bed
   sequence:
